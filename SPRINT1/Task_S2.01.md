@@ -12,7 +12,8 @@ Obert ambdós arxius (`estructura_dades.sql` i `dades_introduir.sql`) al MySQL W
 > A l'estructura de dades, la taula `transaction` crea dues **FK**, una per la `company` (`company(id)`) i una altra per una taula inexistent: `credit_card(id)`. Si fos un altre RDBMS com ara PostgreSQL, aquest _script_ donaria un error, per què aquesta taula encara no existeix:
 > 
 > ![image](https://hackmd.io/_uploads/S1QlUXKpJe.png)
-> 
+>
+> El matexit s'aplica a `user(id)`: la taula `user` no existeix.
 > A més, a d'altrese motors, el tipus de dada de la columna ha de ser exactament el mateix, i aqui tenim que la PK de company és un `VARCHAR(15)` mentre que la columna de la FK a transaction és `VARCHAR(20)`. Com a mínim, planteja una inconsistència de dades ja des del començament.
 > 
 > Un altre punt seria la inconsistència de la nomenclatura de les dades geogràfiques, utilitzant `lat` per "latitude" i `longitude` per la longitut. Hauria de ser l'un (lat, lng|long|lon) o l'altre (latitude, longitude).
