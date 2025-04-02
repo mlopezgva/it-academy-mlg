@@ -13,8 +13,9 @@ Obert ambdós arxius (`estructura_dades.sql` i `dades_introduir.sql`) al MySQL W
 > 
 > ![image](https://hackmd.io/_uploads/S1QlUXKpJe.png)
 >
-> El matexit s'aplica a `user(id)`: la taula `user` no existeix.
-> A més, a d'altrese motors, el tipus de dada de la columna ha de ser exactament el mateix, i aqui tenim que la PK de company és un `VARCHAR(15)` mentre que la columna de la FK a transaction és `VARCHAR(20)`. Com a mínim, planteja una inconsistència de dades ja des del començament.
+> El mateix s'aplica a `user(id)`: la taula `user` no existeix.
+> 
+> A més, a d'altres motors, el tipus de dada de la columna ha de ser exactament el mateix (en el cas de MySQL / MariaDB, en cas d'un tipus INT, ha de ser de la mateixa longitud i "signe" (SIGNED / UNSIGNED) o donarà error), i aqui tenim que la PK de company és un `VARCHAR(15)` mentre que la columna de la FK a transaction és `VARCHAR(20)`. Com a mínim, planteja una inconsistència de dades ja des del començament.
 > 
 > Un altre punt seria la inconsistència de la nomenclatura de les dades geogràfiques, utilitzant `lat` per "latitude" i `longitude` per la longitut. Hauria de ser l'un (lat, lng|long|lon) o l'altre (latitude, longitude).
 > (O, millor, depenent de l'ús del camp, utilizar el tipus `POINT`).
