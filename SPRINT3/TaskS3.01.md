@@ -69,6 +69,8 @@ T }--||  CC: credit_card_id
 @enduml
 ```
 
+![diagrama IE](https://www.plantuml.com/plantuml/svg/ZO_1IiD048Rl-nH3Zqh8lPHIA2WYUAYvXo4xci7Dx38xAGRRTpUDAHQnQ2xP_MVOx_yssL2jxu8pja2meu36KNBBAJkNtrWIAdOGMCY6H13LskWSYR4Di6XYbr261M26BNmu6ByRO3yVvd4jsD4KtOvHBwR3T2kAwLUMqLfIU64AFfUbEtu3J54oDgTI4wIw3c4FItYkTWzFzx1QtJskr-S59SzMDwZ--bAVISVfVtjTlFab_ujzGZatsEzdVNfFh2oljKUZls0L76DH70wmXUM5vYcVuf6w_67dDYI-xy8d)
+
 O, com a diagrama ER:
 
 ```plantuml
@@ -111,6 +113,8 @@ BUYS -N- T
     
 @endchen
 ```
+
+![Diagrama ER](https://www.plantuml.com/plantuml/svg/VL5FIyCm5B-_J_6ZfmaMfWSFierf4V5WALizx3GUIQ31BHl94od3xsuQ2qOSoos__oJB8En5TSOHYPMTmShiMEp1XSuU0r5G7C6xsoa-hPQEoBYewr68PnTO3T827D3YH8Z7QincxwPVBD9L7VP7TlqsmlTOjwkN-lalxussibNizLdDrszZ9asDLNM-ClRbjd71Z-NoICTxCm8VJdm_nFZiFL0q3vlNfxfDOSqObktwPtXyswnnoai6ILm-dznSrrSb6cg0ULsYfGee9zC1JJPAtZ9HAO2MnkdqLTy0)
 
 #### Execució:
 
