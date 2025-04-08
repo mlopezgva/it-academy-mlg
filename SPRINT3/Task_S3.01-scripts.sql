@@ -20,7 +20,7 @@ UPDATE credit_card
  WHERE id   = 'CcU-2938'
 
 -- Ex. 1.3
--- No funciona, per què la FK (company_id) ho rebutjarà: no hi ha una companyia amb l'ID que es demana inserir:
+-- No funciona, per què les FK (company_id, credit_card_id, user_id) ho rebutjaran: no hi ha una companyia amb l'ID que es demana inserir:
 INSERT INTO transaction (
     id,
     credit_card_id, company_id, user_id, lat, longitude, amount, declined
@@ -28,6 +28,19 @@ INSERT INTO transaction (
     '108B1D1D-5B23-A76C-55EF-C568E49A99DD',
     'CcU-9999',     'b-9999',    '9999', 829.999,  -117.999, 111.11, 0
 );
+
+-- Es podria fer amb dades falses,. així:
+INSERT INTO company VALUES (
+    'b-9999', '<SENSE NOM>', '<SENSE TELEFON>', '<SENSE EMAIL>', '<PAIS DESCONEGUT>'
+);
+INSERT INTO credit_card VALUES (
+    DEFAULT, 'CcU-9999', '<IBAN DESCONEGUT>', '0000', '000', '0000-00-00', NULL
+);
+INSERT INTO `user` VALUES (
+    '9999', 'NO-NAME', 'NO-SURNAME', '<NO-PHONE>', '<NO-EMAIL>', NULL, NULL, NULL, NULL, NULL
+);
+--
+-- I després, l'INSERT.
 
 -- Ex. 1.4
 ALTER TABLE credit_card
