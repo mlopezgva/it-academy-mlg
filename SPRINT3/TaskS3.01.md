@@ -215,7 +215,21 @@ INSERT INTO transaction (
 
 ```
 
-dóna error. Per tant, s'hauria d'inserir primer l'empresa amb l'ID que es vol utilitzar aqui abans. La petició es retornaria a qui sigui que hagi demanat la inserció per què donessin d'alta l'empresa al sistema abans.
+dóna error. Per tant, s'hauria d'inserir primer l'empresa amb l'ID que es vol utilitzar aqui abans, així com la targeta `Ccu-9999`. La petició es retornaria a qui sigui que hagi demanat la inserció per què donessin d'alta l'empresa al sistema (i el seu mètode de pagament, que estaria associat a un usuari que tampoc existeix) abans.
+
+#### Utilizant dades falses
+També es por inserir un registre amb dades falses a la taula `company` i a la taula `credit_card` i així poder inserir les dades.No seria l'opció més recomenable. De fet, s'hauria d'evitar.
+
+```sql
+INSERT INTO company VALUES (
+    'b-9999', '<SENSE NOM>', '<SENSE TELEFON>', '<SENSE EMAIL>', '<PAIS DESCONEGUT>'
+);
+INSERT INTO credit_card VALUES (
+    DEFAULT, 'CcU-9999', '<IBAN DESCONEGUT>', '0000', '000', '0000-00-00', NULL
+);
+```
+
+En una base de dades real on s'espera que les dades siguin consistents, aquests `INSERT` no funcionarien, serien rebutjats per _constraints_ que revisarien la validesa de les dades (telèfons només dígits i '+', IBAN amb dues lletres i després només dígits, etc.).
 
 ### Exercici 4
 > Des de recursos humans et sol·liciten eliminar la columna "pan" de la taula credit_*card. Recorda mostrar el canvi realitzat.
