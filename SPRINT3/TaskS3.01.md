@@ -192,7 +192,7 @@ INSERT INTO transaction (
     lat,
     longitude,
     amount,
-    declined,
+    declined
 ) VALUES (
     '108B1D1D-5B23-A76C-55EF-C568E49A99DD',
     'CcU-9999',
@@ -212,7 +212,6 @@ INSERT INTO transaction (
     '108B1D1D-5B23-A76C-55EF-C568E49A99DD',
     'CcU-9999',     'b-9999',    '9999', 829.999,  -117.999, 111.11, 0
 );
-
 ```
 
 dóna error. Per tant, s'hauria d'inserir primer l'empresa amb l'ID que es vol utilitzar aqui abans, així com la targeta `Ccu-9999`. La petició es retornaria a qui sigui que hagi demanat la inserció per què donessin d'alta l'empresa al sistema (i el seu mètode de pagament, que estaria associat a un usuari que tampoc existeix) abans.
@@ -227,9 +226,14 @@ INSERT INTO company VALUES (
 INSERT INTO credit_card VALUES (
     DEFAULT, 'CcU-9999', '<IBAN DESCONEGUT>', '0000', '000', '0000-00-00', NULL
 );
+INSERT INTO `user` VALUES (
+    '9999', 'NO-NAME', 'NO-SURNAME', '<NO-PHONE>', '<NO-EMAIL>', NULL, NULL, NULL, NULL, NULL
+);
 ```
 
-En una base de dades real on s'espera que les dades siguin consistents, aquests `INSERT` no funcionarien, serien rebutjats per _constraints_ que revisarien la validesa de les dades (telèfons només dígits i '+', IBAN amb dues lletres i després només dígits, etc.).
+En una base de dades real, on s'espera que les dades siguin consistents, aquests `INSERT` no funcionarien, serien rebutjats per _constraints_ que revisarien la validesa de les dades (telèfons només dígits i '+', IBAN amb dues lletres i després només dígits, etc.).
+
+![image](https://hackmd.io/_uploads/HkJ1oPMRJl.png)
 
 ### Exercici 4
 > Des de recursos humans et sol·liciten eliminar la columna "pan" de la taula credit_*card. Recorda mostrar el canvi realitzat.
