@@ -164,9 +164,8 @@ I així, executem l'`UPDATE` i executem novament el `SELECT` per confirmar que h
 
 ![image](https://hackmd.io/_uploads/r1-aSAia1e.png)
 
-:::info
-En un ambient de producció es faria amb una seqüència `BEGIN` - `UPDATE` - `SELECT` - `COMMIT`, per evitar perills.
-:::
+> [!TIP]
+> En un ambient de producció es faria amb una seqüència `BEGIN` - `UPDATE` - `SELECT` - `COMMIT`, per evitar perills.
 
 ### Exercici 3
 > En la taula "transaction" ingressa un nou usuari amb la següent informació:
@@ -250,9 +249,11 @@ ALTER TABLE credit_card
 
 ```sql
 DELETE
-  FROM transction
+  FROM transaction
  WHERE id = '02C6201E-D90A-1859-B4EE-88D2986D3B02';
 ```
+
+![image](https://hackmd.io/_uploads/ryMEvp31gg.png)
 
 ### Exercici 2
 > La secció de màrqueting desitja tenir accés a informació específica per a realitzar anàlisi i estratègies efectives. S'ha sol·licitat crear una vista que proporcioni detalls clau sobre les companyies i les seves transaccions. Serà necessària que creïs una vista anomenada VistaMarketing que contingui la següent informació: Nom de la companyia. Telèfon de contacte. País de residència. Mitjana de compra realitzat per cada companyia. Presenta la vista creada, ordenant les dades de major a menor mitjana de compra.
@@ -272,11 +273,11 @@ SELECT * FROM vistamarketing ORDER BY 4 DESC;
 SELECT * FROM vistamarketing ORDER BY `Mitjana de compres` DESC; -- alternate
 ```
 
-Resultados:
+Resultats:
 
+![image](https://hackmd.io/_uploads/HJKGf6nklg.png)
 
-
-```csvpreview
+```csv
 Nom de la companyia,Telèfon,País,Mitjana de compres
 Eget Ipsum Ltd, 03 67 44 56 72, United States, 473.08
 Non Magna LLC, 06 71 73 13 17, United Kingdom, 468.35
@@ -395,7 +396,7 @@ SELECT *
 
 Resultats:
 
-```csvpreview
+```csv
 Nom de la companyia,Telèfon,País,Mitjana de compres
 Aliquam PC, 01 45 73 52 16, Germany, 385.27
 Ac Industries, 09 34 65 40 60, Germany, 289.65
@@ -409,10 +410,9 @@ Convallis In Incorporated, 06 66 57 29 50, Germany, 156.73
 
 ![image](https://hackmd.io/_uploads/SkYaQJ3T1x.png)
 
-
 ## Nivell 3
 ### Exercici 1
-Les taules s'han de modifircar lleugerament:
+Les taules s'han de modificar lleugerament:
 
 #### Company
 Al diagrama de l'exercici no té la columna `website`. Si s'ha de deixat tal com està al diagrama, hem d'eliminar la columna.
@@ -421,8 +421,10 @@ Al diagrama de l'exercici no té la columna `website`. Si s'ha de deixat tal com
 ALTER TABLE company DROP COLUMN website;
 ```
 
+![image](https://hackmd.io/_uploads/SJ7pda3yxe.png)
+
 #### credit_card
-La taula credit_card ja ha "sofert" l'eliminació de la columna `pan` (ves a saber per què...), però com que hem errat amb la creació de la columna `pin` (per concepte, no és un nombre, sinó una seqüència de dígits i, per tant, un _string_), ho canviarem.
+La taula credit_card ja ha "sofert" l'eliminació de la columna `pan` (ves a saber per què...), però com que hem errat amb la creació de la columna `pin` (per concepte: no és un nombre, sinó una seqüència de dígits i, per tant, un _string_), ho canviarem.
 
 A més, al diagrama observem una nova columna `fecha_actual` (que trenca l'estil utilitzant un nom que no és en anglès) de tipus `DATE`.
 
@@ -431,6 +433,8 @@ ALTER TABLE credit_card
      MODIFY COLUMN pin CHAR(4),
         ADD COLUMN fecha_actual DATE;
 ```
+
+![image](https://hackmd.io/_uploads/ryEGBp3yee.png)
 
 Probablement s'haurà de canviar en un futur...
 
@@ -473,11 +477,13 @@ SET foreign_key_checks = 1; -- restablir la verificació
 
 Les relacions que hi ha després d'executar el comandament són les correctes, amb tres FK a transaction:
 
-1. user_id REFERENCES user(id)
-2. credit_card_id REFERENCES credit_card(id)
-3. company_id REFERENCES company(id)
+1. `user_id REFERENCES user(id)`
+2. `credit_card_id REFERENCES credit_card(id)`
+3. `company_id REFERENCES company(id)`
 
-El resultat:
+![image](https://hackmd.io/_uploads/ByuQE62yll.png)
+
+El diagrama resultant:
 
 ![image](https://hackmd.io/_uploads/rJ5t9fbRJl.png)
 
