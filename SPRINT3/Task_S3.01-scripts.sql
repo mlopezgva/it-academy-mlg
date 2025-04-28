@@ -50,7 +50,7 @@ ALTER TABLE credit_card
 
 -- Ex. 2.1
 DELETE
-  FROM transction
+  FROM transaction
  WHERE id = '02C6201E-D90A-1859-B4EE-88D2986D3B02';
 
 -- Ex. 2.2
