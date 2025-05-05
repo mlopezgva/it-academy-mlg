@@ -158,7 +158,8 @@ SELECT cc.iban
   JOIN credit_card AS cc USING(credit_card_id)
   JOIN company     AS c  USING(company_id)
  WHERE company_name = 'Donec Ltd'
-   AND NOT declined;
+   AND NOT declined
+ GROUP BY iban;
 
 -- Nivell 2
 -- Exercici 0

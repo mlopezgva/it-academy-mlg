@@ -9,8 +9,10 @@ Dissenyar l'esquema en estrella.
 ```sql
 CREATE SCHEMA `mlg_sprint4`
       DEFAULT CHARACTER SET utf8
-      COLLATE utf8_unicode_ci ;
+      COLLATE utf8_unicode_ci;
 ```
+
+![image](https://hackmd.io/_uploads/Hk4ywxUgge.png)
 
 He creat un nou esquema per separar-ho tot de l'anterior, encara que s'assembli.
 
@@ -178,8 +180,8 @@ CREATE TABLE IF NOT EXISTS credit_card (
     pan             VARCHAR(20)  NOT NULL UNIQUE KEY,
     pin             CHAR(4)      NOT NULL,
     cvv             CHAR(3)      NOT NULL,
-    track1			VARCHAR(46)  NOT NULL,
-    track2			VARCHAR(32)  NOT NULL,
+    track1          VARCHAR(46)  NOT NULL,
+    track2          VARCHAR(32)  NOT NULL,
     expiring_date   DATE         NOT NULL,
     INDEX cc_iban_idx (iban)
 );
@@ -197,6 +199,8 @@ CREATE TABLE IF NOT EXISTS transaction (
     declined        BOOLEAN       NOT NULL DEFAULT TRUE
 );
 ```
+
+![image](https://hackmd.io/_uploads/S1kz_e8xgg.png)
 
 I amb això tindriem les taules llestes. Ara, hem d'introduïr les dades.
 
@@ -289,6 +293,8 @@ LOAD DATA LOCAL INFILE 'transactions.csv'
 > 
 > Un cop editats els CSV i convertits en DML, executem tot i ja tenim les dades.
 
+![image](https://hackmd.io/_uploads/H1IrFg8xll.png)
+
 ### Exercici 1
 > Realitza una subconsulta que mostri tots els usuaris amb més de 30 transaccions utilitzant almenys 2 taules.
 
@@ -313,6 +319,8 @@ Resultat:
 | 267     | Ocean Nelson   | 39                |
 | 272     | Hedwig Gilbert | 38                |
 
+![image](https://hackmd.io/_uploads/By4FFlIggg.png)
+
 També podem veure el total de transaccions *i* el total de transaccions amb èxit (que és el que mostra la taula anterior). Com que a MySQL els camps `BOOLEAN` són INT(1) i el valor `TRUE` és `1`, podem comptar les transaccions amb èxit sumant els valors de la columna `declined`... però és clar, si és `declined = TRUE` serien les fallides. Asixí que ho inverteixo amb `NOT declined` i hi faig el sumatori.
 
 ```sql
@@ -335,6 +343,8 @@ HAVING COUNT(transaction_id) > 30
 
 Podem veure que hi ha un més, però que té 24 transaccions amb èxit i per això no sortia a la taula anterior.
 
+![image](https://hackmd.io/_uploads/HkKnYeUgxx.png)
+
 ### Exercici 2
 
 > Mostra la mitjana d'amount per IBAN de les targetes de crèdit a la companyia Donec Ltd, utilitza almenys 2 taules.
@@ -348,12 +358,15 @@ SELECT iban
   JOIN credit_card AS cc USING(credit_card_id)
   JOIN company     AS c  USING(company_id)
  WHERE company_name = 'Donec Ltd'
-   AND NOT declined   
+   AND NOT declined
+ GROUP BY iban
 ```
 
 | iban                      | spend_avg |
 | ------------------------- | --------- |
 | PT87806228135092429456346 | 42.820000 |
+
+![image](https://hackmd.io/_uploads/S1B9cgUlxl.png)
 
 ## Nivell 2
 ### Exercici 0
@@ -376,6 +389,8 @@ SELECT credit_card_id
   FROM transaction AS t
   JOIN credit_card AS cc USING(credit_card_id);
 ```
+
+![image](https://hackmd.io/_uploads/rJ1fse8gxx.png)
 
 ### Exercici 1
 
@@ -413,15 +428,16 @@ Resultat:
 |----------:|
 | 349       |
 
+![image](https://hackmd.io/_uploads/BkxHoeIgll.png)
+
 ## Nivell 3
 ### Exercici 0
 > Crea una taula amb la qual puguem unir les dades del nou arxiu products.csv amb la base de dades creada, tenint en compte que des de transaction tens product_ids.
 
 Els productes de cada transacció estan "desnormalitzats" en un _array_ a la columna `product_ids`. Per tant, aquesta nova taula hauria de ser una taula que tingués, com a mínim, dues columnes: `transaction_id` i `product_id`, per referenciar el producte amb la compra. Es podria afegir la columna `declined` per si volem fer una consulta de productes comprats, sense haver de fer `JOIN` amb `transaction` per esbrinar-ho.
 
-:::warning
-Com dèiem abans, amb dades en constant actualització com aquestes, el "correcte" seria utilitzar _VIEWs_, i no taules. de moment, però, utilitzarem una taule, que és el que demana l'exercici.
-:::
+> [!CAUTION]
+> Com dèiem abans, amb dades en constant actualització com aquestes, el "correcte" seria utilitzar _VIEWs_, i no taules. de moment, però, utilitzarem una taule, que és el que demana l'exercici.
 
 Per tant, hem d'extreure aquestes dues (o tres) columnes de la taula `transaction`.
 
@@ -437,6 +453,8 @@ CREATE TABLE product_transaction AS
                 COLUMNS(product_id INT PATH '$')
              ) AS products;
 ```
+
+![image](https://hackmd.io/_uploads/BJz2ixIlee.png)
 
 ### Exercici 1
 
@@ -504,6 +522,8 @@ SELECT product_name, product_id
  WHERE NOT declined
  GROUP BY product_name, product_id
 ```
+
+![image](https://hackmd.io/_uploads/HJCGnxLgxe.png)
 
 | product_name                  | product_id | compres |
 |-------------------------------|-----------:|--------:|
