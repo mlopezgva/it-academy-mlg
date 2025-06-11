@@ -1,0 +1,96 @@
+// Medidas cosméticas
+TITULO_PAGINA1 = "Nivel 1"
+TITULO_PAGINA2 = "Nivel 2"
+
+// NIVEL 1
+// =======
+// Valores fijos (constantes)
+N1E1 KPI = 25000
+N1E2E3 MaxAmount = MAX('mlg_sprint_4 transaction'[ts_amount_success])
+N1E2E3 MonthlyGoal = 250
+N1E5 Objetivo Mensual = 1e4
+
+// Columna calculada para `transactions`: transacciones con éxito: BLANK (ej. NULL) si
+// fueron declinadas
+ts_amount_success = IF(
+    'mlg_sprint_4 transaction'[declined],
+    BLANK(),
+    'mlg_sprint_4 transaction'[amount]
+)
+
+// Tabla dinámica para la tabla de empresas por país
+N1E4 CompanySalesByCountry = SUMMARIZE(
+    'mlg_sprint_4 company',
+    'mlg_sprint_4 company'[country],
+    "Empreses",
+    DISTINCTCOUNT('mlg_sprint_4 transaction'[company_id])
+)
+
+// Tabla para media de ventas por usuario y para el mapa del N3
+N1E7 Usuaris = 
+// - [x] Nom i cognom dels usuaris/es (caldrà crear una nova columna que combini aquesta informació).
+// - [x] Edat dels usuaris/es.
+// Mitjana de les transaccions en euros.
+// Mitjana de les transaccions en dòlars (conversió: 1 euro equival a 1,08 dòlars)
+    CALCULATETABLE(
+        ADDCOLUMNS(
+            'mlg_sprint_4 user',
+            "Nombre", [name] & " " & [surname],
+            "Med. Compras",
+            "Edad", ABS(ROUNDDOWN(DATEDIFF(TODAY(), 'mlg_sprint_4 user'[birthdate], MONTH) / 12, 0)),
+                VAR salesavg = CALCULATE(
+                                    AVERAGE('mlg_sprint_4 transaction'[amount]),
+                                    RELATEDTABLE('mlg_sprint_4 transaction'),
+                                    'mlg_sprint_4 transaction'[declined]==FALSE()
+                                )
+                RETURN salesavg,
+            "USD", CALCULATE(
+                    AVERAGE('mlg_sprint_4 transaction'[amount]),
+                    RELATEDTABLE('mlg_sprint_4 transaction'),
+                    'mlg_sprint_4 transaction'[declined]==FALSE()
+                )*1.08
+        )
+    )
+
+// Nivel 2
+// =======
+// Valores fijos (constantes)
+Sales Goal 2021 = 12500/1.08
+N2E2 Goal = 250
+
+// Tabla E1 (ventas 2021)
+N2E1 Sales 2021 = 
+    SELECTCOLUMNS(
+        FILTER(
+            'mlg_sprint_4 transaction',
+            'mlg_sprint_4 transaction'[transaction_ts].[Año] == 2021 &&
+            NOT 'mlg_sprint_4 transaction'[declined]
+        ),
+        "ts_amount_success", 'mlg_sprint_4 transaction'[amount],
+        "transaction_ts", 'mlg_sprint_4 transaction'[transaction_ts]
+    )
+
+// Tabla E2 (ventas Alemania)
+N2E2 DEUSales = 
+    SELECTCOLUMNS(
+        FILTER(
+            'mlg_sprint_4 transaction',
+            RELATED('mlg_sprint_4 company'[country]) == "Germany" &&
+            NOT 'mlg_sprint_4 transaction'[declined]
+        ),
+        "Sales", 'mlg_sprint_4 transaction'[amount],
+        "Transaction TS", 'mlg_sprint_4 transaction'[transaction_ts]
+    )
+
+// Tabla calculada para la tabla de producto más caro por cliente:
+N3E1 TopProductByClient = 
+SUMMARIZECOLUMNS(
+    'mlg_sprint_4 user_products'[Client Name],
+    'mlg_sprint_4 user_products',
+    "product_price", MAX('mlg_sprint_4 user_products'[price]),
+    "Product Name",  MAX('mlg_sprint_4 user_products'[product_name]),
+    "Product ID",    SELECTEDVALUE('mlg_sprint_4 user_products'[product_id]),
+    "WareHouse",     CALCULATE(MAX('mlg_sprint_4 product'[warehouse_id]), SELECTEDVALUE('mlg_sprint_4 user_products'[product_id]) = 'mlg_sprint_4 user_products'[product_id])
+)
+// WareHouse está incluida porque el precio del mismo productName (que no mismo product_id)
+// cambia dependiendo del warehouse.
