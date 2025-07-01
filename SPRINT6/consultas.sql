@@ -137,3 +137,23 @@ SELECT user_id, CONCAT(u.name, ' ', u.surname) AS uname
 | 268     | Clark Olson        | Canada         | Lannister                     | 161.11        |
 | 141     | Clark Hewitt       | United States  | skywalker ewok                | 172.78        |
 */
+
+
+SELECT `Client Name`
+     , FIRST_VALUE(product_name) OVER pr AS most_expensive
+     , FIRST_VALUE(price)        OVER pr AS max_price
+     , LAST_VALUE(product_name)  OVER pr AS cheapest_product
+     , LAST_VALUE(price)         OVER pr AS cheapest_price
+     , COUNT(transaction_id)             AS transaction_count
+     , (SELECT SUM(declined)
+          FROM `transaction` AS st
+         WHERE st.user_id = up.user_id
+       )                         AS declined_transactions
+     , u.country                 AS users_country
+  FROM user_products AS up
+  JOIN `user`        AS u  USING(user_id)
+ GROUP BY user_id, `Client Name`, u.country, product_name, price
+  WINDOW pr AS (
+         PARTITION BY user_id
+             ORDER BY price DESC)
+;
