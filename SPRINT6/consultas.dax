@@ -30,3 +30,47 @@ EVALUATE
         "transaction_year", 'mlg_sprint_4 transaction'[transaction_year]
     )
     ORDER BY [Client Name]
+
+/* Simplificada a: */
+
+AllUserProducts = 
+VAR jointTable = NATURALINNERJOIN(
+        NATURALINNERJOIN(
+            'mlg_sprint_4 product_transaction',
+            'mlg_sprint_4 transaction'
+        ),
+        'mlg_sprint_4 product'
+    )
+RETURN ADDCOLUMNS(
+    jointTable,
+    "Client",  RELATED('mlg_sprint_4 user'[Nombre]),
+    "Client City", RELATED('mlg_sprint_4 user'[city]),
+    "Client Country", RELATED('mlg_sprint_4 user'[country])
+)
+
+/** O... **/
+AllUserProducts = ADDCOLUMNS(
+    'mlg_sprint_4 product_transaction',
+    "Product", RELATED('mlg_sprint_4 product'[product_name]),
+    "Price",   RELATED('mlg_sprint_4 product'[price]),
+    "Client",  RELATED('mlg_sprint_4 user'[Nombre]),
+    "Client City", RELATED('mlg_sprint_4 user'[city]),
+    "Client Country", RELATED('mlg_sprint_4 user'[country]),
+    "Transaction Date", RELATED('mlg_sprint_4 transaction'[transaction_ts])
+)
+
+/* Usada para los datos de usuario: */
+Usuarios = SUMMARIZE(
+    AllUserProducts,
+    AllUserProducts[Client Name],
+    AllUserProducts[Client City],
+    AllUserProducts[Client Country],
+    "Total Transacciones", COUNTX(AllUserProducts, [transaction_date]),
+    "Total Declinadas",    SUMX('mlg_sprint_4 transaction', 'mlg_sprint_4 transaction'[CountableDeclined]),
+    "Productos comprados", COUNT('mlg_sprint_4 product_transaction'[product_id]),
+    "Producto más caro",   MAXX(TOPN(1, AllUserProducts, [price], DESC), [product_name]),
+    "Mayor precio",        MAXX(AllUserProducts, MAX(AllUserProducts[Product Price])),
+    "Producto más barato", MINX(TOPN(1, AllUserProducts, [price], ASC), [product_name]),
+    "Menor precio",        MINX(AllUserProducts, MIN(AllUserProducts[price])),
+    "Media de ventas",     AVERAGE('mlg_sprint_4 transaction'[ts_amount_success])
+)
