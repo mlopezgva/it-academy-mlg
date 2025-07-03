@@ -6,7 +6,7 @@ Resumen
 Es el país con el mayor volumen de ventas en cantidad y valor:
 
 | País           | Ventas en € | Transacciones |
-| -------------- | -----------:| ------------- |
+| -------------- | -----------:| ------------: |
 | Germany        |    26888.55 | 111           |
 | United Kingdom |    25274.38 | 93            |
 | Sweden         |    18813.45 | 68            |
@@ -17,11 +17,6 @@ Es el país con el mayor volumen de ventas en cantidad y valor:
 | Netherlands    |     2409.40 | 10            |
 | Italy          |     2190.08 | 9             |
 | Belgium        |     2041.74 | 8             |
-| Australia      |     1063.99 | 6             |
-| New Zealand    |     1002.37 | 6             |
-| France         |      508.23 | 3             |
-| China          |      444.48 | 2             |
-| Spain          |       26.22 | 1             |
 
 ## Evolución 2021-22
 Hay una mejoría, que resulta importante en cuanto a la confianza en general tanto desde la percepción del cliente como desde la perspectiva de la gestión de la tienda.
