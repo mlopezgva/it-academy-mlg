@@ -7,16 +7,16 @@ Es el país con el mayor volumen de ventas en cantidad y valor:
 
 | País           | Ventas en € | Transacciones |
 | -------------- | -----------:| ------------: |
-| Germany        |    26888.55 | 111           |
-| United Kingdom |    25274.38 | 93            |
-| Sweden         |    18813.45 | 68            |
-| Ireland        |    16006.22 | 56            |
-| Norway         |    15318.01 | 61            |
-| Canada         |    14930.69 | 57            |
-| United States  |     2587.78 | 9             |
-| Netherlands    |     2409.40 | 10            |
-| Italy          |     2190.08 | 9             |
-| Belgium        |     2041.74 | 8             |
+| Germany        |   26.888,55 |           111 |
+| United Kingdom |   25.274,38 |            93 |
+| Sweden         |   18.813,45 |            68 |
+| Ireland        |   16.006,22 |            56 |
+| Norway         |   15.318,01 |            61 |
+| Canada         |   14.930,69 |            57 |
+| United States  |    2.587,78 |             9 |
+| Netherlands    |    2.409,40 |            10 |
+| Italy          |    2.190,08 |             9 |
+| Belgium        |    2.041,74 |             8 |
 
 ## Evolución 2021-22
 Hay una mejoría, que resulta importante en cuanto a la confianza en general tanto desde la percepción del cliente como desde la perspectiva de la gestión de la tienda.
