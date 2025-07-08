@@ -1,6 +1,33 @@
 import sys
 
+debug = False
+
+def hasCliParam(item, args, remove=True):
+    '''
+    Comprueba si existe un elemento concreto (normalmente un 'flag') entre los
+    argumentos de la línea de comandos.Devuelve True o False.
+
+    item   Elemento a buscar
+    args   Lista de elementos donde buscar (normalmente `sys.argv`)
+    remove Si es `True` elimina el elemento encontrado de la lista
+    '''
+
+    response = False
+
+    if item in args:
+        response = True
+        if remove:
+            args.pop(args.index(item))
+
+    return response
+
 def askNumValue(string):
+    '''
+    Pide al usuario un valor numérico.
+    Comprueba que lo sea antes de devolverlo, y muestra un error
+    si no lo es, antes de finalizar el script.
+    '''
+
     try:
         iVal = input(string)
         return float(iVal)
@@ -9,7 +36,7 @@ def askNumValue(string):
     except:
         exit("Error inesperado")
 
-def imc(peso, altura):
+def IMC(peso, altura):
     '''
     Calcula el índice de masa corporal (IMC)
     con base al peso en kg y la altura en metros
@@ -19,10 +46,15 @@ def imc(peso, altura):
 
     if altura > 50:
         altura /= 100
-    
+
     try:
+        if debug:
+            print("\nPeso:  ", peso, "kg\nAltura:", altura, 'm')
+
         imc = peso / (altura ** 2)
-    
+        if debug:
+            print(f"\n      {peso:6.2f}\nIMC = ——————\n      {altura: 6.2f}²\n\nIMC = {imc:.2f}\n")
+
     except ValueError:
         exit("El valor del peso o la altura son inválidos.")
 
@@ -33,7 +65,7 @@ def imc(peso, altura):
         return imc
 
 def informeImc(imc):
-    info  = f"Basándose en el peso y altura indicados, su IMC es de {imc}.\n"
+    info  = f"En base al peso y altura indicados, su IMC es de {imc:.1f}.\n"
     clase = "Este índice le sitúa en el rango de "
     imccl = clasificaIMC(imc)
     imcclass = [
@@ -45,7 +77,6 @@ def informeImc(imc):
     return info + clase + imcclass[imccl]
 
 def clasificaIMC(imc):
-    print(type(imc))
 
     try:
         match imc:
@@ -64,34 +95,41 @@ def clasificaIMC(imc):
     except TypeError:
         exit("El valor del peso o la altura no son del tipo esperado (float|int)")
 
-args = sys.argv
+args       = sys.argv
 scriptName = args.pop(0)
-argc = len(args)
+debug      = hasCliParam('-v', args) or hasCliParam('--verbose', args)
+showHelp   = hasCliParam('-h', args) or hasCliParam('--help',    args)
+argc       = len(args)
 # Llegados aquí, args tiene solo los argumentos que se le puedan haber pasado
-# y argc el número de argumentos "real" (descontando el nombre del script)
+# y argc el número de argumentos "real" (descontando el nombre del script) o
+# los parámetros (-d, --debug, -h o --help)
 
-print (argc)
+def main():
+    if showHelp:
+        print (f"""
+            Uso:
+                {scriptName}
+                {scriptName}
+                {scriptName} -h           muestra esta ayuda
+                {scriptName} --help       muestra esta ayuda
+                {scriptName} -v           muestra detalles del cálculo del IMC
+                {scriptName} --verbose    muestra detalles del cálculo del IMC
+                {scriptName} <peso en kg>
+                {scriptName} <peso en kg> <altura en m>
 
-if argc == 1 and sys.argv[0] in ["-h", "--help"]:
-    print (f"""
-        Uso:
-            {sys.argv[0]}
-            {sys.argv[0]} -h
-            {sys.argv[0]} --help
-            {sys.argv[0]} <peso en kg>
-            {sys.argv[0]} <peso en kg> <altura en m>
+            Ambos parámetros son opcionales. Si solo se informa del primer
+            valor este será el peso, y se le preguntará por la altura.  Si no
+            se indica ningún valor, se le preguntará por ambos.
 
-        Ambos argumentos son opcionales. Si solo se informa del primer valor
-        este será el peso, y se le preguntará por la altura.
-        Si no se indica ningún valor, se le preguntará por ambos.
+            Para mostrar esta ayuda, use -h o --help
+            """)
+        exit()
 
-        Para mostrar esta ayuda, use -h o --help
-        """)
-    exit()
+    peso   = float(args[0]) if argc > 0 else askNumValue("Peso: ")
+    altura = float(args[1]) if argc > 1 else askNumValue("Altura: ")
 
-peso   = args[0] if argc > 0 else askNumValue("Peso: ")
-altura = args[1] if argc > 1 else askNumValue("Altura: ")
+    imc = IMC(peso, altura)
+    print("\n"+informeImc(imc))
 
-print("Peso:", peso, "\nAltura", altura)
-imc = imc(peso, altura)
-informeImc(imc)
+if __name__ == "__main__":
+    main()
