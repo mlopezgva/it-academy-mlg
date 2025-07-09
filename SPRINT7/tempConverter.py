@@ -1,36 +1,40 @@
-import click # queremos más flexibilidad en esto
-
-# https://click.palletsprojects.com/en/stable/
+import sys
 
 # Definir diccionario de escala, nombre y símbolo para interpretar entrada
-Scales = {
-    "Celsius":    {"symbol": "ºC", "code": "celsius"},
-    "Fahrenheit": {"symbol": "ºF", "code": "fahrenheit"},
-    "Kelvin":     {"symbol": "K",  "code": "kelvin"},
-    "Rankine":    {"symbol": "R",  "code": "rankine"},
-    "Réaumur":    {"symbol": "ºR", "code": "reaumur"}
+scale = {
+    "Celsius":    {"symbol": "ºC", "code": "celsius",    'longName': 'grados Celsius'},
+    "Fahrenheit": {"symbol": "ºF", "code": "fahrenheit", 'longName': 'grados Fahrenheit'},
+    "Kelvin":     {"symbol": "K",  "code": "kelvin",     'longName': 'Kelvins'},
+    "Rankine":    {"symbol": "R",  "code": "rankine",    'longName': 'Rankines'},
+    "Réaumur":    {"symbol": "ºR", "code": "reaumur",    'longName': 'grados Réaumur'}
 }
+# "Aplana" el diccionario anterior ("comprehension", se llama esto...)
+Scales = [
+    {"name": name, **attributes} for name, attributes in scale.items()
+]
 
+def getScaleInfo(attr, value):
+    '''
+    Returns the desired attr (eg. the name or the symbol) of a scale,
+    based on any of the values in the row.
 
-@click.command()
-@click.argument('temperature', type=float, required=True)
-@click.option(
-    '-f',
-    '--from',
-    required=True,
-    default='celsius',
-    autocompletion=Scales.keys()
-)
-@click.OptionParser(
-    '-t',
-    '--to',
-    required=True,
-    default="celsius",
-    type=click.Choice(
-        choices=Scales.keys(),
-        case_sensitive=True
-    )
-)
+    getScale('symbol', 'Celsius')
+    returns `ºC`
+    '''
+    for scale in Scales:
+        if value in scale.values():
+            return scale[attr] if attr in scale else None
+    return None
+
+def getColFrom(dic: dict, column: str):
+    '''
+    Returns the values of a column in a dict 2D matrix
+    (like `Scales`):
+
+    Usage: getColFrom(Scales, 'code')
+    '''
+    return [row.get(column) for row in dic]
+
 def hasCliParam(item, args, remove=True):
     '''
     Comprueba si existe un elemento concreto (normalmente un 'flag') entre los
@@ -49,7 +53,6 @@ def hasCliParam(item, args, remove=True):
 
     return response
 
-
 def askNumValue(string):
     '''
     Pide al usuario un valor numérico.
@@ -65,12 +68,10 @@ def askNumValue(string):
     except:
         exit("Error inesperado")
 
-
 def convertTo(
-        *,
-        fromScale: str = 'Celsius',
-        fromValue: float = 0.0,
-        toScale: str):
+        fromScale: str,
+        fromValue: float,
+        toScale:   str):
 
     match fromScale.lower():
         case 'celsius':
@@ -137,26 +138,88 @@ def convertTo(
 
 # definir función para usar convertTo()
 
+helpInfo = '''\
+En este programa se pueden utilizar las siquientes escalas:
 
-def helpInfo():
-    print('''\
-    En este programa se pueden utilizar las siquientes escalas:
+  ºC  Celsius   Escala originalmente con el 0 en la ebullición del agua y el 100
+                en la solidificación, que luego se invirtió y quedó como la
+                conocemos hoy en día.
+   K  Kelvin    Basada en la Celsius, sitúa sin embargo el punto 0 en el llamado
+                Cero Absoluto, a -273,15ºC. Es la unidad de temperatura del
+                Sistema Internacional de Medidas, con la Celsius como accesoria.
+  ºF  Farenheit Utilizada casi que exclusivamente en los EUA, Canadá o UK.
+   R  Rankine   Basada en la escala Farenheit, sitúa, como la Kelvin, su punto 0
+  Ra            en el 0 absoluto, a -459,67ºF. Aún se emplea para hacer estudios
+                termodinámicos en UK (creada en Escocia) y Estados Unidos.
+  ºR  Réaumur   Escala del s. XVII prácticamente en desuso, va de 0ºR a 80ºR
+ ºRé            también del punto de fusión del agua al de ebullición.
+    '''
 
-      Celsius - Escala originalmente con el 0 en la ebullición
-                del agua y el 100 en la solidificación, que luego
-                se invirtió y quedó como la conocemos ahora.
-      Kelvin    Basada en la Celsius, sitúa sin embargo el punto 0
-                en el llamado Cero Absoluto, a -273,15ºC.
-                Es la unidad de temperatura del Sistema Internacional
-                de Medidas.
-      Farenheit Utilizada casi que exclusivamente en los EUA
-      Rankine   Basada en la escala Farenheit, sitúa, como la Kelvin,
-                su punto 0 en el 0 absoluto, a -459,67ºF. Aún se emplea
-                para hacer estudios termodinámicos en Inglaterra y Estados
-                Unidos.
-      Réaumur   Escala del s. XVII prácticamente en desuso, va de 0ºR a 80ºR
-                también del punto de fusión del agua al de ebullición.
-    ''')
+args       = sys.argv
+scriptName = args.pop(0)
+showScales = hasCliParam('-s', args) or hasCliParam('--show-scales', args)
+verbose    = hasCliParam('-v', args) or hasCliParam('--verbose',     args)
+showHelp   = hasCliParam('-h', args) or hasCliParam('--help',        args)
+argc       = len(args)
 
+def main():
+    if showHelp:
+        print (f"""
+            {helpInfo}
 
-helpInfo()
+            Uso:
+                {scriptName}              el programa pedirá la información
+                {scriptName} -h           muestra esta ayuda
+                {scriptName} --help       muestra esta ayuda
+                {scriptName} <temperatura>
+                {scriptName} <temperatura> <escala de origen>
+                {scriptName} <temperatura> <escala de origen> <escala destino>
+
+            Los valores son opcionales, pero se leerán siempre en orden.
+            Es decir, el primer argumento será la temperatura a convertir.
+            Si no se dan más parámetros, se le pedirán las escalas de origen
+            y destino; si se da también la escala de origen, se pedirá
+            solo la de destino.
+
+            Ejemplos:
+
+                {scriptName}               # el programa pedirá los tres valores
+                {scriptName} celsius       # error: no es un valor numérico!
+                {scriptName} 36.6          # se pedirán las escalas de origen y destino
+                {scriptName} 32 ºC         # se pedirá la escala de destino
+                {scriptName} 32 celsius ºF # hará el cálculo
+
+            Para mostrar esta ayuda, use -h o --help
+            """)
+        exit()
+
+    if showScales:
+        print(helpInfo)
+
+        # Tabla de escalas
+        print(f"{'Scale':^10} | {'Symbol':^7} | {'Alternate':^10}")
+        print("-" * 32)
+        for name, attributes in scale.items():
+            print(f"{name:<10} | {attributes['symbol']:^7} | {attributes['code']:<10}")
+
+        exit()
+
+    tempValue = float(args[0]) if argc > 0 else askNumValue("Temperatura a convertir: ")
+    fromScale = args[1]        if argc > 1 else input("Escala de origen (ver ayuda para opciones): ")
+    toScale   = args[2]        if argc > 2 else input("Convertir a (ver ayuda para opciones): ")
+
+    fromScale = getScaleInfo('code', fromScale) if len(fromScale) < 3 else fromScale
+    toScale   = getScaleInfo('code', toScale)   if len(toScale)   < 3 else toScale
+
+    result = convertTo(fromScale, tempValue, toScale)
+
+    if verbose:
+        print(f"{tempValue:.2f} {getScaleInfo('symbol', fromScale)}",
+              f"({getScaleInfo('longName', fromScale)})",
+              f"son {result:.2f} {getScaleInfo('symbol', toScale)}",
+              f"({getScaleInfo('longName', toScale)}).")
+    else:
+        print(f"{result:.2f}{getScaleInfo('symbol', toScale)}")
+
+if __name__ == "__main__":
+    main()
