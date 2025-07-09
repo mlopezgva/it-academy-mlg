@@ -1,7 +1,35 @@
-import math
-import sys
-import argparse # queremos más flexibilidad en esto
+import click # queremos más flexibilidad en esto
 
+
+# Definir diccionario de escala, nombre y símbolo para interpretar entrada
+Scales = {
+    "Celsius":    {"symbol": "ºC", "code": "celsius"},
+    "Fahrenheit": {"symbol": "ºF", "code": "fahrenheit"},
+    "Kelvin":     {"symbol": "K",  "code": "kelvin"},
+    "Rankine":    {"symbol": "R",  "code": "rankine"},
+    "Réaumur":    {"symbol": "ºR", "code": "reaumur"}
+}
+
+
+@click.command()
+@click.argument('temperature', type=float, required=True)
+@click.option(
+    '-f',
+    '--from',
+    required=True,
+    default='celsius',
+    autocompletion=Scales.keys()
+)
+@click.OptionParser(
+    '-t',
+    '--to',
+    required=True,
+    default="celsius",
+    type=click.Choice(
+        choices=Scales.keys(),
+        case_sensitive=True
+    )
+)
 def hasCliParam(item, args, remove=True):
     '''
     Comprueba si existe un elemento concreto (normalmente un 'flag') entre los
@@ -20,6 +48,7 @@ def hasCliParam(item, args, remove=True):
 
     return response
 
+
 def askNumValue(string):
     '''
     Pide al usuario un valor numérico.
@@ -35,11 +64,12 @@ def askNumValue(string):
     except:
         exit("Error inesperado")
 
-def convertTo(*,
-        fromScale: str='Celsius',
+
+def convertTo(
+        *,
+        fromScale: str = 'Celsius',
         fromValue: float = 0.0,
         toScale: str):
-    pass
 
     match fromScale.lower():
         case 'celsius':
@@ -103,28 +133,29 @@ def convertTo(*,
                 case 'reaumur':
                     return fromValue
 
-# Definir diccionario de escala, nombre y símbolo para interpretar entrada
 
 # definir función para usar convertTo()
 
-# definir argumentos y parámetros del programa con argparse
 
 def helpInfo():
     print('''\
-        En este programa se pueden utilizar las siquientes escalas:
+    En este programa se pueden utilizar las siquientes escalas:
 
-          Celsius - Escala originalmente con el 0 en la ebullición
-                    del agua y el 100 en la solidificación, que luego
-                    se invirtió y quedó como la conocemos ahora.
-          Kelvin    Basada en la Celsius, sitúa sin embargo el punto 0
-                    en el llamado Cero Absoluto, a -273,15ºC.
-                    Es la unidad de temperatura del Sistema Internacional
-                    de Medidas.
-          Farenheit Utilizada casi que exclusivamente en los EUA
-          Rankine   Basada en la escala Farenheit, sitúa, como la Kelvin,
-                    su punto 0 en el 0 absoluto, a -459,67ºF. Aún se emplea
-                    para hacer estudios termodinámicos en Inglaterra y Estados
-                    Unidos.
-          Réaumur   Escala del s. XVII prácticamente en desuso, va de 0ºR a 80ºR
-                    también del punto de fusión del agua al de ebullición.
+      Celsius - Escala originalmente con el 0 en la ebullición
+                del agua y el 100 en la solidificación, que luego
+                se invirtió y quedó como la conocemos ahora.
+      Kelvin    Basada en la Celsius, sitúa sin embargo el punto 0
+                en el llamado Cero Absoluto, a -273,15ºC.
+                Es la unidad de temperatura del Sistema Internacional
+                de Medidas.
+      Farenheit Utilizada casi que exclusivamente en los EUA
+      Rankine   Basada en la escala Farenheit, sitúa, como la Kelvin,
+                su punto 0 en el 0 absoluto, a -459,67ºF. Aún se emplea
+                para hacer estudios termodinámicos en Inglaterra y Estados
+                Unidos.
+      Réaumur   Escala del s. XVII prácticamente en desuso, va de 0ºR a 80ºR
+                también del punto de fusión del agua al de ebullición.
     ''')
+
+
+helpInfo()
