@@ -1,5 +1,6 @@
 import click # queremos más flexibilidad en esto
 
+# https://click.palletsprojects.com/en/stable/
 
 # Definir diccionario de escala, nombre y símbolo para interpretar entrada
 Scales = {
