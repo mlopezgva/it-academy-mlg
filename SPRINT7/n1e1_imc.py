@@ -53,7 +53,12 @@ def IMC(peso, altura):
 
         imc = peso / (altura ** 2)
         if debug:
-            print(f"\n      {peso:6.2f}\nIMC = ——————\n      {altura: 6.2f}²\n\nIMC = {imc:.2f}\n")
+            print(
+                f"\n      {peso:6.2f}",
+                f"IMC = —————— = {imc:.2f}",
+                f"      {altura: 6.2f}²\n",
+                # f"IMC = {imc:.2f}\n",
+                sep="\n")
 
     except ValueError:
         exit("El valor del peso o la altura son inválidos.")
@@ -64,8 +69,8 @@ def IMC(peso, altura):
     else:
         return imc
 
-def informeImc(imc):
-    info  = f"En base al peso y altura indicados, su IMC es de {imc:.1f}.\n"
+def informeImc(imc: float):
+    info  = f"En base al peso y altura indicados, su IMC es de {imc:03.2f}.\n"
     clase = "Este índice le sitúa en el rango de "
     imccl = clasificaIMC(imc)
     imcclass = [
@@ -74,6 +79,7 @@ def informeImc(imc):
         "sobrepeso",
         "Obesidad"
     ]
+    # print(f"Su IMC: {imc:.2f}")
     return info + clase + imcclass[imccl]
 
 def clasificaIMC(imc):

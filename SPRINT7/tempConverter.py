@@ -13,7 +13,7 @@ Scales = [
     {"name": name, **attributes} for name, attributes in scale.items()
 ]
 
-def getScaleInfo(attr, value):
+def get_scale_info(attr, value):
     '''
     Returns the desired attr (eg. the name or the symbol) of a scale,
     based on any of the values in the row.
@@ -26,16 +26,7 @@ def getScaleInfo(attr, value):
             return scale[attr] if attr in scale else None
     return None
 
-def getColFrom(dic: dict, column: str):
-    '''
-    Returns the values of a column in a dict 2D matrix
-    (like `Scales`):
-
-    Usage: getColFrom(Scales, 'code')
-    '''
-    return [row.get(column) for row in dic]
-
-def hasCliParam(item, args, remove=True):
+def has_cli_param(item, args, remove=True):
     '''
     Comprueba si existe un elemento concreto (normalmente un 'flag') entre los
     argumentos de la línea de comandos.Devuelve True o False.
@@ -53,7 +44,7 @@ def hasCliParam(item, args, remove=True):
 
     return response
 
-def askNumValue(string):
+def ask_num_value(string):
     '''
     Pide al usuario un valor numérico.
     Comprueba que lo sea antes de devolverlo, y muestra un error
@@ -68,7 +59,7 @@ def askNumValue(string):
     except:
         exit("Error inesperado")
 
-def convertTo(
+def convert_to(
         fromScale: str,
         fromValue: float,
         toScale:   str):
@@ -89,11 +80,11 @@ def convertTo(
         case 'fahrenheit':
             match toScale.lower():
                 case 'celsius':
-                    return (fromValue - 32)/1.8
+                    return (fromValue - 32) / 1.8
                 case 'fahrenheit':
                     return fromValue
                 case 'kelvin':
-                    return ((fromValue - 32)/1.8) + 273.15
+                    return ((fromValue - 32) / 1.8) + 273.15
                 case 'rankine':
                     return fromValue + 459.67
                 case 'reaumur':
@@ -103,7 +94,7 @@ def convertTo(
                 case 'celsius':
                     return fromValue + 273.15
                 case 'fahrenheit':
-                    return ((fromValue - 273.15)*1.8) + 32
+                    return ((fromValue - 273.15) * 1.8) + 32
                 case 'kelvin':
                     return fromValue
                 case 'rankine':
@@ -157,14 +148,14 @@ En este programa se pueden utilizar las siquientes escalas:
 
 args       = sys.argv
 scriptName = args.pop(0)
-showScales = hasCliParam('-s', args) or hasCliParam('--show-scales', args)
-verbose    = hasCliParam('-v', args) or hasCliParam('--verbose',     args)
-showHelp   = hasCliParam('-h', args) or hasCliParam('--help',        args)
+showScales = has_cli_param('-s', args) or has_cli_param('--show-scales', args)
+verbose    = has_cli_param('-v', args) or has_cli_param('--verbose',     args)
+showHelp   = has_cli_param('-h', args) or has_cli_param('--help',        args)
 argc       = len(args)
 
 def main():
     if showHelp:
-        print (f"""
+        print(f"""
             {helpInfo}
 
             Uso:
@@ -204,22 +195,22 @@ def main():
 
         exit()
 
-    tempValue = float(args[0]) if argc > 0 else askNumValue("Temperatura a convertir: ")
+    tempValue = float(args[0]) if argc > 0 else ask_num_value("Temperatura a convertir: ")
     fromScale = args[1]        if argc > 1 else input("Escala de origen (ver ayuda para opciones): ")
     toScale   = args[2]        if argc > 2 else input("Convertir a (ver ayuda para opciones): ")
 
-    fromScale = getScaleInfo('code', fromScale) if len(fromScale) < 3 else fromScale
-    toScale   = getScaleInfo('code', toScale)   if len(toScale)   < 3 else toScale
+    fromScale = get_scale_info('code', fromScale) if len(fromScale) < 3 else fromScale
+    toScale   = get_scale_info('code', toScale)   if len(toScale)   < 3 else toScale
 
-    result = convertTo(fromScale, tempValue, toScale)
+    result = convert_to(fromScale, tempValue, toScale)
 
     if verbose:
-        print(f"{tempValue:.2f} {getScaleInfo('symbol', fromScale)}",
-              f"({getScaleInfo('longName', fromScale)})",
-              f"son {result:.2f} {getScaleInfo('symbol', toScale)}",
-              f"({getScaleInfo('longName', toScale)}).")
+        print(f"{tempValue:.2f} {get_scale_info('symbol', fromScale)}",
+              f"({get_scale_info('longName', fromScale)})",
+              f"son {result:.2f} {get_scale_info('symbol', toScale)}",
+              f"({get_scale_info('longName', toScale)}).")
     else:
-        print(f"{result:.2f}{getScaleInfo('symbol', toScale)}")
+        print(f"{result:.2f}{get_scale_info('symbol', toScale)}")
 
 if __name__ == "__main__":
     main()
