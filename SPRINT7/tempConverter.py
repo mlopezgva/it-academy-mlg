@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-from  cli_funcs import *
+from cli_funcs import has_cli_param, \
+    ask_num_value, argc, args, showHelp, scriptName
 
 # Definir diccionario de escala, nombre y símbolo para interpretar entrada
 scale = {
@@ -19,7 +20,7 @@ def get_scale_info(attr, value):
     Returns the desired attr (eg. the name or the symbol) of a scale,
     based on any of the values in the row.
 
-    getScale('symbol', 'Celsius')
+    get_scale_info('symbol', 'Celsius')
     returns `ºC`
     '''
     for scale in Scales:
@@ -94,7 +95,6 @@ def convert_to(
                 case 'reaumur':
                     return fromValue
 
-
 # definir función para usar convertTo()
 
 helpInfo = '''\
@@ -112,7 +112,7 @@ En este programa se pueden utilizar las siquientes escalas:
                 termodinámicos en UK (creada en Escocia) y Estados Unidos.
   ºR  Réaumur   Escala del s. XVII prácticamente en desuso, va de 0ºR a 80ºR
  ºRé            también del punto de fusión del agua al de ebullición.
-    '''
+'''
 
 showScales = has_cli_param('-s', args) or has_cli_param('--show-scales', args)
 verbose    = has_cli_param('-v', args) or has_cli_param('--verbose',     args)
@@ -123,9 +123,9 @@ def main():
             {helpInfo}
 
             Uso:
-                {scriptName}               el programa pedirá la información
-                {scriptName} -h            muestra esta ayuda
-                {scriptName} --help        muestra esta ayuda
+                {scriptName}               El programa pedirá la información
+                {scriptName} -h            Muestra esta ayuda
+                {scriptName} --help        Muestra esta ayuda
                 {scriptName} -s            Muestra la lista de escalas.
                 {scriptName} --show-scales Muestra la lista de escalas.
                 {scriptName} <temperatura>
@@ -135,17 +135,17 @@ def main():
             Los valores son opcionales, pero se leerán siempre en orden.
             Es decir, el primer argumento será la temperatura a convertir.
             Si no se dan más parámetros, se le pedirán las escalas de origen
-            y destino; si se da también la escala de origen, se pedirá
-            solo la de destino.
+            y destino; si se da también la escala de origen, se pedirá solo la
+            de destino.
 
-            Para referirse a una esca,a se puede utilizar cualqueira de los elementos
-            de la lista de escalas ({scriptName} --show-scales).
+            Para referirse a una esca,a se puede utilizar cualqueira de los
+            elementos de la lista de escalas ({scriptName} --show-scales).
 
             Ejemplos:
 
                 {scriptName}               # el programa pedirá los tres valores
                 {scriptName} celsius       # error: no es un valor numérico!
-                {scriptName} 36.6          # se pedirán las escalas de origen y destino
+                {scriptName} 36.6          # se pedirán origen y destino
                 {scriptName} 32 ºC         # se pedirá la escala de destino
                 {scriptName} 32 celsius ºF # hará el cálculo
 

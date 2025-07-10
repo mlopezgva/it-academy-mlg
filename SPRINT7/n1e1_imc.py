@@ -1,5 +1,6 @@
 import sys
-from cli_funcs import *
+from cli_funcs import has_cli_param, \
+    ask_num_value, argc, args, showHelp, scriptName
 
 verbose = False
 
@@ -14,9 +15,12 @@ def IMC(peso, altura):
     if altura > 50:
         altura /= 100
 
+    if altura > 2.5:
+        exit(f"Una altura de {altura}m parece ser excesiva para un humano.")
+
     try:
         if verbose:
-            print("\nPeso:  ", peso, "kg\nAltura:", altura, 'm')
+            print(f"\nPeso:  {peso: 6.2f} kg\nAltura: {altura: 6.2f} m")
 
         imc = peso / (altura ** 2)
         if verbose:
@@ -31,15 +35,15 @@ def IMC(peso, altura):
         exit("El valor del peso o la altura son inválidos.")
 
     except TypeError:
-        exit("El valor del peso o la altura no son del tipo esperado (float|int)")
+        exit("El valor no es del tipo esperado (float|int)")
 
     else:
         return imc
 
 def informeImc(imc: float):
-    info  = f"En base al peso y altura indicados, su IMC es de {imc:03.2f}.\n"
-    clase = "Este índice le sitúa en el rango de "
-    imccl = clasificaIMC(imc)
+    info     = f"En base al peso y altura indicados, su IMC es de {imc:03.2f}.\n"
+    clase    = "Este índice le sitúa en el rango de "
+    imccl    = clasificaIMC(imc)
     imcclass = [
         "bajo peso",
         "peso normal",
@@ -95,7 +99,7 @@ def main():
     altura = float(args[1]) if argc() > 1 else ask_num_value("Altura: ")
 
     imc = IMC(peso, altura)
-    print("\n"+informeImc(imc))
+    print("\n" + informeImc(imc))
 
 if __name__ == "__main__":
     main()
