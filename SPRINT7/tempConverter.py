@@ -1,5 +1,5 @@
-#!/usr/bin/python3.10
-import sys
+#!/usr/bin/python3
+from  cli_funcs import *
 
 # Definir diccionario de escala, nombre y símbolo para interpretar entrada
 scale = {
@@ -26,39 +26,6 @@ def get_scale_info(attr, value):
         if value in scale.values():
             return scale[attr] if attr in scale else None
     return None
-
-def has_cli_param(item, args, remove=True):
-    '''
-    Comprueba si existe un elemento concreto (normalmente un 'flag') entre los
-    argumentos de la línea de comandos.Devuelve True o False.
-
-    item   Elemento a buscar
-    args   Lista de elementos donde buscar (normalmente `sys.argv`)
-    remove Si es `True` elimina el elemento encontrado de la lista
-    '''
-    response = False
-
-    if item in args:
-        response = True
-        if remove:
-            args.pop(args.index(item))
-
-    return response
-
-def ask_num_value(string):
-    '''
-    Pide al usuario un valor numérico.
-    Comprueba que lo sea antes de devolverlo, y muestra un error
-    si no lo es, antes de finalizar el script.
-    '''
-
-    try:
-        iVal = input(string)
-        return float(iVal)
-    except ValueError:
-        exit(f"'{iVal}' no se puede interpretar como un número!")
-    except:
-        exit("Error inesperado")
 
 def convert_to(
         fromScale: str,
@@ -147,12 +114,8 @@ En este programa se pueden utilizar las siquientes escalas:
  ºRé            también del punto de fusión del agua al de ebullición.
     '''
 
-args       = sys.argv
-scriptName = args.pop(0)
 showScales = has_cli_param('-s', args) or has_cli_param('--show-scales', args)
 verbose    = has_cli_param('-v', args) or has_cli_param('--verbose',     args)
-showHelp   = has_cli_param('-h', args) or has_cli_param('--help',        args)
-argc       = len(args)
 
 def main():
     if showHelp:
@@ -160,9 +123,11 @@ def main():
             {helpInfo}
 
             Uso:
-                {scriptName}              el programa pedirá la información
-                {scriptName} -h           muestra esta ayuda
-                {scriptName} --help       muestra esta ayuda
+                {scriptName}               el programa pedirá la información
+                {scriptName} -h            muestra esta ayuda
+                {scriptName} --help        muestra esta ayuda
+                {scriptName} -s            Muestra la lista de escalas.
+                {scriptName} --show-scales Muestra la lista de escalas.
                 {scriptName} <temperatura>
                 {scriptName} <temperatura> <escala de origen>
                 {scriptName} <temperatura> <escala de origen> <escala destino>
@@ -172,6 +137,9 @@ def main():
             Si no se dan más parámetros, se le pedirán las escalas de origen
             y destino; si se da también la escala de origen, se pedirá
             solo la de destino.
+
+            Para referirse a una esca,a se puede utilizar cualqueira de los elementos
+            de la lista de escalas ({scriptName} --show-scales).
 
             Ejemplos:
 
@@ -196,9 +164,9 @@ def main():
 
         exit()
 
-    tempValue = float(args[0]) if argc > 0 else ask_num_value("Temperatura a convertir: ")
-    fromScale = args[1]        if argc > 1 else input("Escala de origen (ver ayuda para opciones): ")
-    toScale   = args[2]        if argc > 2 else input("Convertir a (ver ayuda para opciones): ")
+    tempValue = float(args[0]) if argc() > 0 else ask_num_value("Temperatura a convertir: ")
+    fromScale = args[1]        if argc() > 1 else input("Escala de origen (ver ayuda para opciones): ")
+    toScale   = args[2]        if argc() > 2 else input("Convertir a (ver ayuda para opciones): ")
 
     fromScale = get_scale_info('code', fromScale) if len(fromScale) < 3 else fromScale
     toScale   = get_scale_info('code', toScale)   if len(toScale)   < 3 else toScale

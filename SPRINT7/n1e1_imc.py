@@ -1,40 +1,7 @@
 import sys
+from cli_funcs import *
 
-debug = False
-
-def hasCliParam(item, args, remove=True):
-    '''
-    Comprueba si existe un elemento concreto (normalmente un 'flag') entre los
-    argumentos de la línea de comandos.Devuelve True o False.
-
-    item   Elemento a buscar
-    args   Lista de elementos donde buscar (normalmente `sys.argv`)
-    remove Si es `True` elimina el elemento encontrado de la lista
-    '''
-
-    response = False
-
-    if item in args:
-        response = True
-        if remove:
-            args.pop(args.index(item))
-
-    return response
-
-def askNumValue(string):
-    '''
-    Pide al usuario un valor numérico.
-    Comprueba que lo sea antes de devolverlo, y muestra un error
-    si no lo es, antes de finalizar el script.
-    '''
-
-    try:
-        iVal = input(string)
-        return float(iVal)
-    except ValueError:
-        exit(f"'{iVal}' no se puede interpretar como un número!")
-    except:
-        exit("Error inesperado")
+verbose = False
 
 def IMC(peso, altura):
     '''
@@ -48,11 +15,11 @@ def IMC(peso, altura):
         altura /= 100
 
     try:
-        if debug:
+        if verbose:
             print("\nPeso:  ", peso, "kg\nAltura:", altura, 'm')
 
         imc = peso / (altura ** 2)
-        if debug:
+        if verbose:
             print(
                 f"\n      {peso:6.2f}",
                 f"IMC = —————— = {imc:.2f}",
@@ -101,14 +68,7 @@ def clasificaIMC(imc):
     except TypeError:
         exit("El valor del peso o la altura no son del tipo esperado (float|int)")
 
-args       = sys.argv
-scriptName = args.pop(0)
-debug      = hasCliParam('-v', args) or hasCliParam('--verbose', args)
-showHelp   = hasCliParam('-h', args) or hasCliParam('--help',    args)
-argc       = len(args)
-# Llegados aquí, args tiene solo los argumentos que se le puedan haber pasado
-# y argc el número de argumentos "real" (descontando el nombre del script) o
-# los parámetros (-d, --debug, -h o --help)
+verbose = has_cli_param('-v', args) or has_cli_param('--verbose', args)
 
 def main():
     if showHelp:
@@ -131,8 +91,8 @@ def main():
             """)
         exit()
 
-    peso   = float(args[0]) if argc > 0 else askNumValue("Peso: ")
-    altura = float(args[1]) if argc > 1 else askNumValue("Altura: ")
+    peso   = float(args[0]) if argc() > 0 else ask_num_value("Peso: ")
+    altura = float(args[1]) if argc() > 1 else ask_num_value("Altura: ")
 
     imc = IMC(peso, altura)
     print("\n"+informeImc(imc))
