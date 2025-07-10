@@ -1,3 +1,4 @@
+#!/usr/bin/python3.10
 import sys
 
 # Definir diccionario de escala, nombre y símbolo para interpretar entrada
