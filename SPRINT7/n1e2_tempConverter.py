@@ -120,6 +120,8 @@ verbose    = has_cli_param('-v', args) or has_cli_param('--verbose',     args)
 def main():
     if showHelp:
         print(f"""
+            N1:E2 - Conversor de Temperatura
+            --------------------------------
             {helpInfo}
 
             Uso:

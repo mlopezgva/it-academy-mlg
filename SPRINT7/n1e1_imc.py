@@ -45,27 +45,29 @@ def informeImc(imc: float):
     clase    = "Este índice le sitúa en el rango de "
     imccl    = clasificaIMC(imc)
     imcclass = [
+        "riesgo de anorexia",
         "bajo peso",
         "peso normal",
         "sobrepeso",
         "Obesidad"
     ]
-    # print(f"Su IMC: {imc:.2f}")
+    # print(imcclass, f"Su IMC: {imc:.2f}")    # debug code
     return info + clase + imcclass[imccl]
 
 def clasificaIMC(imc):
-
     try:
         match imc:
-            case x if x < 18.5:
+            case x if x < 17.5:
                 return 0
-            case x if x < 24.9:
+            case x if x < 18.5:
                 return 1
-            case x if x < 29.9:
+            case x if x < 24.9:
                 return 2
-            case _:
+            case x if x < 29.9:
                 return 3
-        print("It's OK")
+            case _:
+                return 4
+
     except ValueError:
         exit("El valor del peso o la altura son inválidos.")
 
@@ -77,6 +79,9 @@ verbose = has_cli_param('-v', args) or has_cli_param('--verbose', args)
 def main():
     if showHelp:
         print (f"""
+            N1:E1 - Cálculo de IMC
+            ----------------------
+            
             Uso:
                 {scriptName}
                 {scriptName}
@@ -98,8 +103,7 @@ def main():
     peso   = float(args[0]) if argc() > 0 else ask_num_value("Peso: ")
     altura = float(args[1]) if argc() > 1 else ask_num_value("Altura: ")
 
-    imc = IMC(peso, altura)
-    print("\n" + informeImc(imc))
+    print("\n" + informeImc(IMC(peso, altura)))
 
 if __name__ == "__main__":
     main()
