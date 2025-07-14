@@ -2,13 +2,20 @@ def invertDict(dicc: dict={}):
     if len(dicc) == 0:
         return ("Empty dictionary!")
 
-    if len(set(dicc.values())) != len(dicc):
-        return ("Error: multiple keys for same value")
-
     invDicc = {}
 
     for (k, v) in dicc.items():
-        invDicc[v] = k
+        # print(f"k: {k=} , v: {v=}")
+        new_value = k
+
+        if v in invDicc.keys():
+            # print(f"Error: multiple keys for same value '{v}'")
+            # print(type(invDicc[v]))
+            # print("v:", invDicc[v], k)
+            new_value = [invDicc[v], k] if type(invDicc[v]) is str \
+                                        else invDicc[v].append(k)
+            # print(f"Added {new_value=}")
+        invDicc[v] = new_value
 
     return invDicc
 
