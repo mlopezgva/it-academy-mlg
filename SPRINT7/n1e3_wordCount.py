@@ -20,7 +20,7 @@ if showHelp:
 
         Or, you can use it without parameters and it will ask for the text to
         process.
-       
+
     ''')
 
 skipOneCount = has_cli_param('-s', args) \
@@ -31,34 +31,38 @@ verbose      = has_cli_param('v', args) or has_cli_param('--verbose', args)
 # Si se le pasa un texto por parámetros, leerlo. Si no, preguntar
 data = ' '.join(sys.argv) if len(sys.argv) else input("Fichero o texto a contar:")
 
-if os.path.isfile(data):
-    with (open(data, 'r') as fileToRead):
-        strToCount = fileToRead.read().lower()
-else:
-    strToCount = data.lower()   # Rosa y rosa son la misma palabra...
+def word_count(data, skip_once_words: bool=False):
+    response = []
+    global skipOneCount
 
-# regex para quitar lo que no sean caracteres alfanuméricos, pero dejando acentos.
-words = re.sub(
-    r"(\b\d+\b|[^a-zA-Z0-9ÁÄÃÂÀÉËÊÈÍÏÎÓÖÕÔÒÚÜÛÙÑáäãâàéëêèíïîóöõôòúüûùñ @])",
-    ' ',
-    strToCount,
-    flags=re.MULTILINE)
+    skip_unique = skipOneCount or skip_once_words or False
 
-def word_count(text, skip_once_words: bool=False):
-    words = re.sub(r"\s{2,}", ' ', text).split()
+    if os.path.isfile(data):
+        with (open(data, 'r') as fileToRead):
+            strToCount = fileToRead.read()
+    else:
+        strToCount = data
 
-    distinctWords = set(words)  # el set() elimina automáticamente los duplicados...
-    max_word_len = len(max(distinctWords, key=len))
-
-    template = "La palabra {} aparece {} {}"
-    template = "{} aparece {} {}"
-
+    # Elimina caracteres no alfabéticos, y también los números sueltos
+    words         = re.sub(r"(\b\d+\b)|[^a-zA-Z0-9ÁÄÃÂÀÉËÊÈÍÏÎÓÖÕÔÒÚÜÛÙÑáäãâàéëêèíïîóöõôòúüûùñ @-]", ' ', strToCount).split()
+    distinctWords = set(words)
     for w in distinctWords:
         wc = words.count(w)
 
-        if wc == 1 and skipOneCount:
+        if wc == 1 and skip_unique:
             continue
 
-        print(template.format(w, wc, "vez" if wc == 1 else "veces"))
+        response.append([w, wc])
+    return response
 
-word_count(words)
+def show_wc(distinct_words: list):
+    template     = "{} - aparece {} {}"
+    max_word_len = len(max(distinct_words, key=len))
+
+    for w in distinct_words:
+        word, wc = w
+        word = f"{word:<{max_word_len}}"
+
+        response.append(template.format(word, wc, "vez" if wc == 1 else "veces"))
+
+print(word_count(data, skipOneCount))
