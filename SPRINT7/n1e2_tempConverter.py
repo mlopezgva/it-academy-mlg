@@ -181,7 +181,7 @@ def main():
               f"son {result:.2f} {get_scale_info('symbol', toScale)}",
               f"({get_scale_info('longName', toScale)}).")
     else:
-        print(f"{result:.2f}{get_scale_info('symbol', toScale)}")
+        print(f"{tempValue}{get_scale_info('symbol', fromScale)} = {result:.2f}{get_scale_info('symbol', toScale)}")
 
 if __name__ == "__main__":
     main()

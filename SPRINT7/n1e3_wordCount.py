@@ -2,6 +2,7 @@ import os
 import re
 from cli_funcs import sys, has_cli_param, \
     argc, args, showHelp, scriptName
+LF = "\n"
 
 if showHelp:
     exit(f'''
@@ -28,9 +29,6 @@ skipOneCount = has_cli_param('-s', args) \
     or has_cli_param('--skip-word-once', args)
 verbose      = has_cli_param('v', args) or has_cli_param('--verbose', args)
 
-# Si se le pasa un texto por parámetros, leerlo. Si no, preguntar
-data = ' '.join(sys.argv) if len(sys.argv) else input("Fichero o texto a contar:")
-
 def word_count(data, skip_once_words: bool=False):
     response = []
     global skipOneCount
@@ -44,8 +42,9 @@ def word_count(data, skip_once_words: bool=False):
         strToCount = data
 
     # Elimina caracteres no alfabéticos, y también los números sueltos
-    words         = re.sub(r"(\b\d+\b)|[^a-zA-Z0-9ÁÄÃÂÀÉËÊÈÍÏÎÓÖÕÔÒÚÜÛÙÑáäãâàéëêèíïîóöõôòúüûùñ @-]", ' ', strToCount).split()
+    words         = re.sub(r"(\b\d+\b)|[^a-zA-Z0-9ÁÄÃÂÀÉËÊÈÍÏÎÓÖÕÔÒÚÜÛÙÑáäãâàéëêèíïîóöõôòúüûùñ @]", ' ', strToCount).split()
     distinctWords = set(words)
+
     for w in distinctWords:
         wc = words.count(w)
 
@@ -56,13 +55,21 @@ def word_count(data, skip_once_words: bool=False):
     return response
 
 def show_wc(distinct_words: list):
-    template     = "{} - aparece {} {}"
-    max_word_len = len(max(distinct_words, key=len))
+    response = []
+    template = "{} - aparece {} {}"
 
     for w in distinct_words:
         word, wc = w
-        word = f"{word:<{max_word_len}}"
 
         response.append(template.format(word, wc, "vez" if wc == 1 else "veces"))
 
-print(word_count(data, skipOneCount))
+    return LF.join(response)
+
+def main():
+    # Si se le pasa un texto por parámetros, leerlo. Si no, preguntar
+    data = ' '.join(sys.argv) if len(sys.argv) else input("Fichero o texto a contar:")
+
+    print(show_wc(word_count(data, skipOneCount)))
+
+if __name__ == "__main__":
+    main()
