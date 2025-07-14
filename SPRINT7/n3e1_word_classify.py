@@ -1,6 +1,5 @@
-from cli_funcs import has_cli_param, \
-    ask_num_value, argc, args, showHelp, scriptName
-from n1e3_wordCount import word_count, skipOneCount
+from cli_funcs import argc, args, showHelp, scriptName
+from n1e3_wordCount import word_count
 
 if showHelp:
     exit(f'''

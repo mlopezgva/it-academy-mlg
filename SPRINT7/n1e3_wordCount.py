@@ -1,7 +1,6 @@
 import os
 import re
-from cli_funcs import sys, has_cli_param, \
-    argc, args, showHelp, scriptName
+from cli_funcs import sys, has_cli_param, args, showHelp, scriptName
 LF = "\n"
 
 if showHelp:
