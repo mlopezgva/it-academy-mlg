@@ -18,7 +18,7 @@ def convertibles(values: list):
             num = float(i)
             numerics.append(
                 i if isinstance(i, (int, float))
-                    else float(i) if 'e' in i or '.' in i
+                    else num    if 'e' in i or '.' in i
                     else int(i)
             )
         except ValueError:

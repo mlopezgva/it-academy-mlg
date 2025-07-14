@@ -67,7 +67,7 @@ def convert_to(
                 case 'kelvin':
                     return fromValue
                 case 'rankine':
-                    return fromValue / 1.8
+                    return fromValue * 1.8
                 case 'reaumur':
                     return (fromValue - 273.15) / 1.25
         case 'rankine':

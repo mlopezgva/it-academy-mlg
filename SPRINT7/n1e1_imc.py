@@ -1,4 +1,3 @@
-import sys
 from cli_funcs import has_cli_param, \
     ask_num_value, argc, args, showHelp, scriptName
 
@@ -81,7 +80,7 @@ def main():
         print (f"""
             N1:E1 - Cálculo de IMC
             ----------------------
-            
+
             Uso:
                 {scriptName}
                 {scriptName}
