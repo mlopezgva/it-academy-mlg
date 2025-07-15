@@ -140,7 +140,7 @@ def main():
             y destino; si se da también la escala de origen, se pedirá solo la
             de destino.
 
-            Para referirse a una esca,a se puede utilizar cualqueira de los
+            Para referirse a una escala se puede utilizar cualquiera de los
             elementos de la lista de escalas ({scriptName} --show-scales).
 
             Ejemplos:
@@ -149,7 +149,7 @@ def main():
                 {scriptName} celsius       # error: no es un valor numérico!
                 {scriptName} 36.6          # se pedirán origen y destino
                 {scriptName} 32 ºC         # se pedirá la escala de destino
-                {scriptName} 32 celsius ºF # hará el cálculo
+                {scriptName} 32 celsius ºF # hará el cálculo cd ºC a ºF
 
             Para mostrar esta ayuda, use -h o --help
             """)
