@@ -2,19 +2,45 @@
 from cli_funcs import has_cli_param, \
     ask_num_value, argc, args, showHelp, scriptName
 
-# Definir diccionario de escala, nombre y símbolo para interpretar entrada
-scale = {
-    "Celsius":    {"symbol": "ºC", "code": "celsius",    'longName': 'grados Celsius'},
-    "Fahrenheit": {"symbol": "ºF", "code": "fahrenheit", 'longName': 'grados Fahrenheit'},
-    "Kelvin":     {"symbol": "K",  "code": "kelvin",     'longName': 'Kelvins'},
-    "Rankine":    {"symbol": "R",  "code": "rankine",    'longName': 'Rankines'},
-    "Réaumur":    {"symbol": "ºR", "code": "reaumur",    'longName': 'grados Réaumur'}
+# Definir diccionario de escala, nombrey símbolo para interpretar entrada
+# Define conversiones de y a Kelvin para realizar las conversiones
+scales = {
+    "celsius":    {
+        "symbol":   "ºC",
+        'name':     "Celsius",
+        'longName': 'grados Celsius',
+        'to_k':     (lambda temp: 273.15 + temp),
+        'from_k':   (lambda temp: temp - 273.15)
+    },
+    "fahrenheit": {
+        "symbol":   "ºF",
+        'name':     "Fahrenheit",
+        'longName': 'grados Fahrenheit',
+        'to_k':     (lambda temp: ((temp - 32) / 1.8) + 273.15),
+        'from_k':   (lambda temp: ((temp - 273.15) * 1.8) + 32)
+    },
+    "kelvin":     {
+        "symbol":   "K",
+        'name':     "Kelvin",
+        'longName': 'Kelvins',
+        'to_k':     (lambda temp: temp),
+        'from_k':   (lambda temp: temp)
+    },
+    "rankine":    {
+        "symbol":   "R",
+        'name':     "Rankine",
+        'longName': 'Rankines',
+        'to_k':     (lambda temp: temp / 1.8),
+        'from_k':   (lambda temp: temp * 1.8)
+    },
+    "reaumur":    {
+        "symbol":   "ºR",
+        'name':     "Réaumur",
+        'longName': 'grados Réaumur',
+        'to_k':     (lambda temp: (temp * 1.25) + 273.15),
+        'from_k':   (lambda temp: (temp - 273.15) / 1.25)
+    }
 }
-# "Aplana" el diccionario anterior ("comprehension", se llama esto...)
-Scales = [
-    {"name": name, **attributes} for name, attributes in scale.items()
-]
-
 def get_scale_info(attr, value):
     '''
     Returns the desired attr (eg. the name or the symbol) of a scale,
@@ -23,77 +49,24 @@ def get_scale_info(attr, value):
     get_scale_info('symbol', 'Celsius')
     returns `ºC`
     '''
+    # "Aplana" el diccionario anterior ("comprehension", se llama esto...)
+    Scales = [
+        {"code": name, **attributes} for name, attributes in scales.items()
+    ]
+
     for scale in Scales:
         if value in scale.values():
-            return scale[attr] if attr in scale else None
-    return None
+            return scale[attr] if attr in scale else ''
+    return ''
 
 def convert_to(
-        fromScale: str,
         fromValue: float,
+        fromScale: str,
         toScale:   str):
 
-    match fromScale.lower():
-        case 'celsius':
-            match toScale.lower():
-                case 'celsius':
-                    return fromValue
-                case 'fahrenheit':
-                    return fromValue * 1.8 + 32
-                case 'kelvin':
-                    return fromValue - 273.15
-                case 'rankine':
-                    return (fromValue + 273.15) * 1.8
-                case 'reaumur':
-                    return 0.8 * fromValue
-        case 'fahrenheit':
-            match toScale.lower():
-                case 'celsius':
-                    return (fromValue - 32) / 1.8
-                case 'fahrenheit':
-                    return fromValue
-                case 'kelvin':
-                    return ((fromValue - 32) / 1.8) + 273.15
-                case 'rankine':
-                    return fromValue + 459.67
-                case 'reaumur':
-                    return (fromValue * 1.8) + 32
-        case 'kelvin':
-            match toScale.lower():
-                case 'celsius':
-                    return fromValue + 273.15
-                case 'fahrenheit':
-                    return ((fromValue - 273.15) * 1.8) + 32
-                case 'kelvin':
-                    return fromValue
-                case 'rankine':
-                    return fromValue * 1.8
-                case 'reaumur':
-                    return (fromValue - 273.15) / 1.25
-        case 'rankine':
-            match toScale.lower():
-                case 'celsius':
-                    return (fromValue - 491.67) / 1.8
-                case 'fahrenheit':
-                    return fromValue - 459.67
-                case 'kelvin':
-                    return fromValue / 1.8
-                case 'rankine':
-                    return fromValue
-                case 'reaumur':
-                    return (fromValue - 491.67) / 2.25
-        case 'reaumur':
-            match toScale.lower():
-                case 'celsius':
-                    return fromValue / 0.8
-                case 'fahrenheit':
-                    return (fromValue - 32) / 2.25
-                case 'kelvin':
-                    return (fromValue * 1.25) + 273.15
-                case 'rankine':
-                    return (fromValue * 2.25) + 491.67
-                case 'reaumur':
-                    return fromValue
+    return scales[toScale]['from_k'](
+        scales[fromScale]['to_k'](fromValue)
+    )
 
 # definir función para usar convertTo()
 
@@ -116,6 +89,16 @@ En este programa se pueden utilizar las siquientes escalas:
 
 showScales = has_cli_param('-s', args) or has_cli_param('--show-scales', args)
 verbose    = has_cli_param('-v', args) or has_cli_param('--verbose',     args)
+
+def print_conversion(tempValue, fromScale, toScale, result, verbose):
+    if verbose:
+        print(f"{tempValue:.2f} {get_scale_info('symbol', fromScale)}",
+              f"({get_scale_info('longName', fromScale)})",
+              f"son {result:.2f} {get_scale_info('symbol', toScale)}",
+              f"({get_scale_info('longName', toScale)}).")
+    else:
+        print(f"{tempValue}{get_scale_info('symbol', fromScale)} = {result:.2f}{get_scale_info('symbol', toScale)}")
+
 
 def main():
     if showHelp:
@@ -168,20 +151,21 @@ def main():
 
     tempValue = float(args[0]) if argc() > 0 else ask_num_value("Temperatura a convertir: ")
     fromScale = args[1]        if argc() > 1 else input("Escala de origen (ver ayuda para opciones): ")
-    toScale   = args[2]        if argc() > 2 else input("Convertir a (ver ayuda para opciones): ")
+    toScale   = args[2]        if argc() > 2 else input("Convertir a\n(ver ayuda para opciones, <Enter> para convertir a todas las escalas): ")
 
     fromScale = get_scale_info('code', fromScale) if len(fromScale) < 3 else fromScale
     toScale   = get_scale_info('code', toScale)   if len(toScale)   < 3 else toScale
 
-    result = convert_to(fromScale, tempValue, toScale)
-
-    if verbose:
-        print(f"{tempValue:.2f} {get_scale_info('symbol', fromScale)}",
-              f"({get_scale_info('longName', fromScale)})",
-              f"son {result:.2f} {get_scale_info('symbol', toScale)}",
-              f"({get_scale_info('longName', toScale)}).")
+    if not toScale:
+        for to_scale in scales.keys():
+            # print(f"Convierte de {fromScale} a {to_scale}")
+            if fromScale == to_scale:
+                continue
+            result = convert_to(tempValue, fromScale, to_scale)
+            print_conversion(tempValue, fromScale, to_scale, result, verbose)
     else:
-        print(f"{tempValue}{get_scale_info('symbol', fromScale)} = {result:.2f}{get_scale_info('symbol', toScale)}")
+        result = convert_to(tempValue, fromScale, toScale)
+        print_conversion(tempValue, fromScale, toScale, result, verbose)
 
 if __name__ == "__main__":
     main()
