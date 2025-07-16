@@ -1,9 +1,11 @@
+from rdict_helpers import dict_has_dupes, dupes_err_msg
+
 def invertDict(dicc: dict={}):
     if len(dicc) == 0:
         return ("Empty dictionary!")
 
-    if len(set(dicc.values())) != len(dicc):
-        return ("Error: multiple keys for same value")
+    if dict_has_dupes(dicc):
+        return dupes_err_msg
 
     invDicc = {}
 

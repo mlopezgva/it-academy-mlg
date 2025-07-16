@@ -1,6 +1,16 @@
-def invertDict(dicc: dict={}, allow_duplicates=True):
+from rdict_helpers import dict_has_dupes, dupes_err_msg
+
+def invertDict(dicc: dict={}, allow_duplicates=False):
+    '''
+    dict dicc   Dictionary to invert
+    Bool allow_duplicates  if True, keys with same value will become
+                           a list.
+    '''
     if len(dicc) == 0:
         return ("Empty dictionary!")
+
+    if dict_has_dupes(dicc):
+        return dupes_err_msg
 
     invDicc = {}
 
@@ -9,9 +19,6 @@ def invertDict(dicc: dict={}, allow_duplicates=True):
         new_value = k
 
         if v in invDicc.keys():
-            if not allow_duplicates:
-                return f"Error: multiple keys for same value '{v}'"
-
             new_value = [invDicc[v], k] if type(invDicc[v]) is str \
                                         else invDicc[v].append(k)
         invDicc[v] = new_value
