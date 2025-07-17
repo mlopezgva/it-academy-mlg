@@ -1,5 +1,6 @@
 from cli_funcs import argc, args, showHelp, scriptName
-from n1e3_wordCount import word_count
+from n1e3_wordCount import word_count, sortByFreq
+from operator import itemgetter
 
 if showHelp:
     exit(f'''
@@ -15,10 +16,14 @@ if showHelp:
 
 def classify_word_count(text: str):
     palabras = word_count(text)
-    list.sort(palabras)
 
-    letras   = [chr(x) for x in range(ord('a'), ord('z'))]
-    lista    = {}
+    if sortByFreq:
+        palabras = sorted(palabras, key=itemgetter(1))
+    else:
+        list.sort(palabras)
+
+    letras = [chr(x) for x in range(ord('a'), ord('z'))]
+    lista  = {}
 
     for char in letras:
         lista[char] = {}
@@ -33,8 +38,10 @@ def classify_word_count(text: str):
 
     return lista
 
-text = args[0] if argc() else input("Texto o fichero a procesar: ")
+def main():
+    text = args[0] if argc() else input("Texto o fichero a procesar: ")
 
-print(text)
+    print(classify_word_count(text))
 
-print(classify_word_count(text))
+if __name__ == "__main__":
+    main()

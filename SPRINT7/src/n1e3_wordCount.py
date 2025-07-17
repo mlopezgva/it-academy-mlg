@@ -27,6 +27,8 @@ skipOneCount = has_cli_param('-s', args) \
     or has_cli_param('--skip-once-word', args) \
     or has_cli_param('--skip-word-once', args)
 verbose      = has_cli_param('v', args) or has_cli_param('--verbose', args)
+sortByFreq   = has_cli_param('--sort-by-freq', args) \
+    or has_cli_param('-f', args)
 
 def word_count(data, skip_once_words: bool=False):
     response = []
@@ -35,13 +37,18 @@ def word_count(data, skip_once_words: bool=False):
     skip_unique = skipOneCount or skip_once_words or False
 
     if os.path.isfile(data):
+        if verbose:
+            print("Reading file", data)
         with (open(data, 'r') as fileToRead):
             strToCount = fileToRead.read()
     else:
         strToCount = data
 
     # Elimina caracteres no alfabéticos, y también los números sueltos
-    words         = re.sub(r"(\b\d+\b)|[^a-zA-Z0-9ÁÄÃÂÀÉËÊÈÍÏÎÓÖÕÔÒÚÜÛÙÑáäãâàéëêèíïîóöõôòúüûùñ @]", ' ', strToCount).split()
+    words = re.sub(
+        r"(\b\d+\b)|[^a-zA-Z0-9ÁÄÃÂÀÉËÊÈÍÏÎÓÖÕÔÒÚÜÛÙÑáäãâàéëêèíïîóöõôòúüûùñ @]",
+        ' ',
+        strToCount.lower()).split()
     distinctWords = set(words)
 
     for w in distinctWords:
