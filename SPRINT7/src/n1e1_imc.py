@@ -73,7 +73,7 @@ def clasificaIMC(imc):
     except TypeError:
         exit("El valor del peso o la altura no son del tipo esperado (float|int)")
 
-verbose = has_cli_param('-v', args) or has_cli_param('--verbose', args)
+verbose = has_cli_param(['-v', '--verbose'], args)
 
 def main():
     if showHelp:

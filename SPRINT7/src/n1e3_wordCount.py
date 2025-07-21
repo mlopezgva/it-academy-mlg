@@ -1,5 +1,6 @@
 import os
 import re
+from operator import itemgetter
 from cli_funcs import sys, has_cli_param, args, showHelp, scriptName
 LF = "\n"
 
@@ -9,9 +10,11 @@ if showHelp:
 
         Usage:
 
-        {scriptName} [-s | --skip-once-word] [filename | <text>]
+        {scriptName} [-s|--skip-words-once] [-f|--sort-by-freq] <text>|<filename>
 
-        Use '-s'  to skip words that appear only once in the text.
+        Use '-s' to skip words that appear only once in the text.
+
+        Use '-f' to sort the output by word frequency.
 
         You can pass a filepath as parameter. If it exists, it will try to read
         it and use its contents as text and process it.
@@ -23,12 +26,9 @@ if showHelp:
 
     ''')
 
-skipOneCount = has_cli_param('-s', args) \
-    or has_cli_param('--skip-once-word', args) \
-    or has_cli_param('--skip-word-once', args)
-verbose      = has_cli_param('v', args) or has_cli_param('--verbose', args)
-sortByFreq   = has_cli_param('--sort-by-freq', args) \
-    or has_cli_param('-f', args)
+skipOneCount = has_cli_param(['-s','--skip-once-word','--skip-word-once'],args)
+verbose      = has_cli_param(['-v', '-verbose'], args)
+sortByFreq   = has_cli_param(['-f', '--sort-by-freq'], args)
 
 def word_count(data, skip_once_words: bool=False):
     response = []
@@ -39,6 +39,7 @@ def word_count(data, skip_once_words: bool=False):
     if os.path.isfile(data):
         if verbose:
             print("Reading file", data)
+
         with (open(data, 'r') as fileToRead):
             strToCount = fileToRead.read()
     else:
@@ -63,6 +64,11 @@ def word_count(data, skip_once_words: bool=False):
 def show_wc(distinct_words: list):
     response = []
     template = "{} - aparece {} {}"
+
+    if sortByFreq:
+        palabras = sorted(palabras, key=itemgetter(1))
+    else:
+        list.sort(palabras)
 
     for w in distinct_words:
         word, wc = w

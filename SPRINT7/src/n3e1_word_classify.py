@@ -4,12 +4,15 @@ from operator import itemgetter
 
 if showHelp:
     exit(f'''
-        {scriptName} [-s|--skip-words-once] <text>|<filename>
+        {scriptName} [-s|--skip-words-once] [-f|--sort-by-freq] <text>|<filename>
 
         Use '-s' para ignorar palabras que solo aparecen una vez en el texto.
 
-        El parámetro obligatorio es o bien un texto, o el  nombre (ruta/fichero)
-        a leer y procesar:
+        Use '-f' para ordenar la lista resultante por frecuencia de aparición
+        de cada palabra.
+
+        El parámetro obligatorio es o bien un texto, o el nombre (ruta/fichero)
+        del fichero a leer y procesar:
 
         {scriptName} -s fichero_de_ejemplo.txt
     ''')

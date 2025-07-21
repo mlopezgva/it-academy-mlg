@@ -87,8 +87,8 @@ En este programa se pueden utilizar las siquientes escalas:
  ºRé            también del punto de fusión del agua al de ebullición.
 '''
 
-showScales = has_cli_param('-s', args) or has_cli_param('--show-scales', args)
-verbose    = has_cli_param('-v', args) or has_cli_param('--verbose',     args)
+showScales = has_cli_param(['-s', '--show-scales'], args)
+verbose    = has_cli_param(['-v', '--verbose'],     args)
 
 def print_conversion(tempValue, fromScale, toScale, result, verbose):
     if verbose:
@@ -144,10 +144,10 @@ def main():
         # Tabla de escalas
         print(f"{'Scale':^10} | {'Symbol':^7} | {'Alternate':^10}")
         print("-" * 32)
-        for name, attributes in scale.items():
-            print(f"{name:<10} | {attributes['symbol']:^7} | {attributes['code']:<10}")
+        for code, attributes in scales.items():
+            print(f"{attributes['name']:<10} | {attributes['symbol']:^7} | {code:<10}")
 
-        exit()
+        exit("")
 
     tempValue = float(args[0]) if argc() > 0 else ask_num_value("Temperatura a convertir: ")
     fromScale = args[1]        if argc() > 1 else input("Escala de origen (ver ayuda para opciones): ")
