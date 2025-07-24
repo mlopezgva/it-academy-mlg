@@ -25,7 +25,7 @@ def classify_word_count(text: str):
     else:
         list.sort(palabras)
 
-    letras = [chr(x) for x in range(ord('a'), ord('z'))]
+    letras = [chr(x) for x in range(ord('a'), ord('z')+1)]
     lista  = {}
 
     for char in letras:
