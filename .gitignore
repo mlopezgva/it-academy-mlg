@@ -1,4 +1,5 @@
-SPRINT7/__pycache__/
+__pycache__
+db.ini
 *.*~
 *.swp
 *.swo
