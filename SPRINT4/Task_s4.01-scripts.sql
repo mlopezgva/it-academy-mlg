@@ -6,18 +6,13 @@ CREATE SCHEMA `mlg_sprint4`
       DEFAULT CHARACTER SET utf8
       COLLATE utf8_unicode_ci ;
 
+USE mlg_sprint4;
+
 -- 
 -- Creem les taules:
 -- 
 
-CREATE TABLE IF NOT EXISTS product (
-    product_id    INT           AUTO_INCREMENT PRIMARY KEY,
-    product_name  TEXT          NOT NULL,
-    price         DECIMAL(10,2) NOT NULL DEFAULT 0.0,
-    colour        VARCHAR(10), -- 9 if alpha info comes up...
-    weight        FLOAT         NOT NULL,
-    warehouse_id  VARCHAR(8)    NOT NULL  -- 8 just in case
-);
+
 
 -- Prices have the money symbol ('`$`') in the CSV, so we have to edit
 -- and remove it first from the file before importing
@@ -52,8 +47,8 @@ CREATE TABLE IF NOT EXISTS credit_card (
     pan             VARCHAR(20)  NOT NULL UNIQUE KEY,
     pin             CHAR(4)      NOT NULL,
     cvv             CHAR(3)      NOT NULL,
-    track1			VARCHAR(46)  NOT NULL,
-    track2			VARCHAR(32)  NOT NULL,
+    track1          VARCHAR(46)  NOT NULL,
+    track2          VARCHAR(32)  NOT NULL,
     expiring_date   DATE         NOT NULL,
     INDEX cc_iban_idx (iban)
 );
@@ -223,3 +218,11 @@ SELECT product_name
   JOIN product     USING(product_id)
   JOIN transaction USING(transaction_id)
  GROUP BY product_name, product_id
+CREATE TABLE IF NOT EXISTS product (
+    product_id    INT           AUTO_INCREMENT PRIMARY KEY,
+    product_name  TEXT          NOT NULL,
+    price         DECIMAL(10,2) NOT NULL DEFAULT 0.0,
+    colour        VARCHAR(10), -- 9 if alpha info comes up...
+    weight        FLOAT         NOT NULL,
+    warehouse_id  VARCHAR(8)    NOT NULL  -- 8 just in case
+);

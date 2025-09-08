@@ -60,7 +60,7 @@ CREATE OR REPLACE VIEW VistaMarketing AS
             , c.country      AS 'País'
             , (SELECT ROUND(AVG(amount), 2)
                  FROM `transaction` AS sT
-                WHERE sT.company_id = c.id) AS 'Mitjana de compres'
+                WHERE sT.company_id = c.company_id) AS 'Mitjana de compres'
          FROM company AS c;
 
 -- Show the view ordered by the average

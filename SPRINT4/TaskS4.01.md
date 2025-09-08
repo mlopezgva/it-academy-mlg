@@ -247,7 +247,7 @@ LOAD DATA LOCAL INFILE 'credit_cards.csv'
 ;
 
 LOAD DATA LOCAL INFILE 'transactions.csv'
-     INTO TABLE transcation
+     INTO TABLE `transaction`
           FIELDS TERMINATED BY ';'
                  OPTIONALLY ENCLOSED BY '"'
           IGNORE 1 LINES
@@ -445,7 +445,7 @@ Per tant, hem d'extreure aquestes dues (o tres) columnes de la taula `transactio
 CREATE TABLE product_transaction AS
       SELECT transaction_id
            , product_id
-        -- , declined   -- interessant per estalviar-se un JOIN més endavant
+           , declined   -- interessant per estalviar-se un JOIN més endavant
         FROM `transaction` AS t
         JOIN JSON_TABLE(
                 t.product_ids,
