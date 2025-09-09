@@ -1,7 +1,5 @@
 import configparser
 import mysql.connector
-import pandas as pd
-import sys
 
 LF="\n"
 global tr_df, user_df, co_df, pr_df, prtr_df
@@ -11,7 +9,7 @@ def is_defined(varname):
 
 def is_dataFrame(varname):
     return is_defined(varname) \
-        and type(globals().get(varname)) is pd.core.frame.DataFrame
+        and type(varname) is pd.core.frame.DataFrame
 
 # Conectar con la base de datos. Datos de la conexión en db.ini
 # Devuelve la variable `db` para poder usarla en otros ambientes
@@ -80,6 +78,22 @@ def list_dividers(numbers, n):
         points.append(point)
 
     return points
+
+def get_color(number, color_map):
+    sorted_keys = sorted(key for key in color_map.keys() if isinstance(key, int))
+
+    # Primero los valores extremos...
+    if number < sorted_keys[0]:
+        return color_map[sorted_keys[0]]
+    elif number > sorted_keys[-1]:
+        return color_map['else']
+
+    # Ahora los valores de las keys
+    for key in sorted_keys:
+        if number < key:
+            return color_map[key]
+
+    return color_map[sorted_keys[-1]]
 
 def color_list_to_dict(values, color_list):
     keys      = list_dividers(values, len(color_list))
