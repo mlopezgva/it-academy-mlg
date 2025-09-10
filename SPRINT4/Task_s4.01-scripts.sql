@@ -12,7 +12,14 @@ USE mlg_sprint4;
 -- Creem les taules:
 -- 
 
-
+CREATE TABLE IF NOT EXISTS product (
+    product_id    INT           AUTO_INCREMENT PRIMARY KEY,
+    product_name  TEXT          NOT NULL,
+    price         DECIMAL(10,2) NOT NULL DEFAULT 0.0,
+    colour        VARCHAR(10), -- 9 if alpha info comes up...
+    weight        FLOAT         NOT NULL,
+    warehouse_id  VARCHAR(8)    NOT NULL  -- 8 just in case
+);
 
 -- Prices have the money symbol ('`$`') in the CSV, so we have to edit
 -- and remove it first from the file before importing
@@ -55,15 +62,24 @@ CREATE TABLE IF NOT EXISTS credit_card (
 
 CREATE TABLE IF NOT EXISTS transaction (
     transaction_id  CHAR(36)      PRIMARY KEY,
-    company_id      VARCHAR(12)   REFERENCES company(company_id),
-    user_id         INT UNSIGNED  REFERENCES user(user_id),
-    credit_card_id  VARCHAR(10)   REFERENCES credit_card(credit_card_id),
+    company_id      VARCHAR(12),
+    user_id         INT UNSIGNED,
+    credit_card_id  VARCHAR(10),
     product_ids     JSON          COMMENT 'With JSON should be easier to work with',
     transaction_ts  TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     amount          DECIMAL(10,2) NOT NULL DEFAULT 0.0,
     latitude        FLOAT SIGNED,
     longitude       FLOAT SIGNED,
-    declined        BOOLEAN       NOT NULL DEFAULT TRUE
+    declined        BOOLEAN       NOT NULL DEFAULT TRUE,
+    CONSTRAINT transaction_cpny_fk
+       FOREIGN KEY (company_id)
+        REFERENCES company(company_id),
+    CONSTRAINT transaction_user_fk
+       FOREIGN KEY (user_id)
+        REFERENCES user(user_id),
+    CONSTRAINT transaction_ccid_fk
+       FOREIGN KEY (credit_card_id)
+        REFERENCES credit_card(credit_card_id)
 );
 
 -- 
@@ -115,7 +131,7 @@ LOAD DATA
 
 LOAD DATA
     LOCAL INFILE 'transactions.csv'
-     INTO TABLE transcation
+     INTO TABLE `transaction`
           FIELDS TERMINATED BY ';'
                  OPTIONALLY ENCLOSED BY '"'
           IGNORE 1 LINES
@@ -218,11 +234,3 @@ SELECT product_name
   JOIN product     USING(product_id)
   JOIN transaction USING(transaction_id)
  GROUP BY product_name, product_id
-CREATE TABLE IF NOT EXISTS product (
-    product_id    INT           AUTO_INCREMENT PRIMARY KEY,
-    product_name  TEXT          NOT NULL,
-    price         DECIMAL(10,2) NOT NULL DEFAULT 0.0,
-    colour        VARCHAR(10), -- 9 if alpha info comes up...
-    weight        FLOAT         NOT NULL,
-    warehouse_id  VARCHAR(8)    NOT NULL  -- 8 just in case
-);

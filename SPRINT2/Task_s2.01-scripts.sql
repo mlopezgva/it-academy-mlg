@@ -32,16 +32,16 @@ CREATE TABLE IF NOT EXISTS company (
 -- Creamos la tabla transaction
 CREATE TABLE IF NOT EXISTS transaction (
 	id             VARCHAR(64) PRIMARY KEY,
-	credit_card_id VARCHAR(15) REFERENCES credit_card(id),
-	company_id     VARCHAR(20), 
-	user_id        INT         REFERENCES user(id),
+	credit_card_id VARCHAR(15) REFERENCES credit_card(credit_card_id),
+	company_id     VARCHAR(20),
+	user_id        INT         REFERENCES user(user_id),
 	lat            FLOAT,
 	longitude      FLOAT,
 	timestamp      TIMESTAMP,
 	amount         DECIMAL(10, 2),
 	declined       BOOLEAN,
-	FOREIGN KEY (company_id)
-	 REFERENCES company(id) 
+	FOREIGN KEY transaction_company_fk (company_id)
+	 REFERENCES company(company_id)
 );
 
 /* ### Exercici 2 - Consultes amb JOIN */

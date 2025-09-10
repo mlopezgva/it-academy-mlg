@@ -1,15 +1,8 @@
 import configparser
 import mysql.connector
+import pandas as pd
 
 LF="\n"
-global tr_df, user_df, co_df, pr_df, prtr_df
-
-def is_defined(varname):
-    return varname in globals()
-
-def is_dataFrame(varname):
-    return is_defined(varname) \
-        and type(varname) is pd.core.frame.DataFrame
 
 # Conectar con la base de datos. Datos de la conexión en db.ini
 # Devuelve la variable `db` para poder usarla en otros ambientes
@@ -57,12 +50,12 @@ def get_color(number, color_map):
         return color_map[sorted_keys[0]]
     elif number > sorted_keys[-1]:
         return color_map['else']
-    
+
     # Ahora los valores de las keys
     for key in sorted_keys:
         if number < key:
             return color_map[key]
-    
+
     return color_map[sorted_keys[-1]]
 
 # Funciones para crear listas de colores para columnas
@@ -106,12 +99,12 @@ def column_colors(values, color_map: dict):
     for that value from a dictionary.
 
     The 'else' key sets the color for any value greater than the last defined.
-    
+
     Usage:
         values = [2,4,5,7,9]
         colormap1 = {4: 'red', 8: 'amber', 'else': 'green'}
         colormap2 = {3: 'orange', 5: 'amber', 8: 'cyan', 'else': 'green'}
-        
+
         column_color(values, colormap1)
 
         Would return
@@ -127,7 +120,7 @@ def column_colors(values, color_map: dict):
         ['orange', 'amber', 'amber', 'cyan', 'green']
     '''
     cc = []
-    
+
     for n in values:
         cc.append(get_color(n, color_map))
     return cc
