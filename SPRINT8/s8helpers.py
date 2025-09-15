@@ -4,6 +4,9 @@ import pandas as pd
 
 LF="\n"
 
+def is_defined(varname):
+    return varname in globals()
+
 # Conectar con la base de datos. Datos de la conexión en db.ini
 # Devuelve la variable `db` para poder usarla en otros ambientes
 # (al definirla en el módulo, no es visible fuera, así que la devuelve
@@ -71,22 +74,6 @@ def list_dividers(numbers, n):
         points.append(point)
 
     return points
-
-def get_color(number, color_map):
-    sorted_keys = sorted(key for key in color_map.keys() if isinstance(key, int))
-
-    # Primero los valores extremos...
-    if number < sorted_keys[0]:
-        return color_map[sorted_keys[0]]
-    elif number > sorted_keys[-1]:
-        return color_map['else']
-
-    # Ahora los valores de las keys
-    for key in sorted_keys:
-        if number < key:
-            return color_map[key]
-
-    return color_map[sorted_keys[-1]]
 
 def color_list_to_dict(values, color_list):
     keys      = list_dividers(values, len(color_list))
