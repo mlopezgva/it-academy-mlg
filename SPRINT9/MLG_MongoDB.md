@@ -480,7 +480,7 @@ Nivell 3
 ```javascript
 db.movies.find({
         directors: /john landis/i,
-        "imdb.rating": {$gte: 5, $lte: 8}
+        "imdb.rating": {$gte: 7.5, $lte: 8}
     },
     {title:1, directors: 1, "imdb.rating": 1, _id: 0}
 })
@@ -488,14 +488,14 @@ db.movies.find({
 
 Captura:
 
-![image](https://hackmd.io/_uploads/ByMZdG_2ex.png)
+![image](https://hackmd.io/_uploads/SkPL6WW6ge.png)
 
 Para seguir con la tradición, mostramos la más conocida y legible tabla :wink: :
 
 ```javascript
 landisMovies = db.movies.find({
         directors: /john landis/i,
-        "imdb.rating": {$gte: 5, $lte: 8}
+        "imdb.rating": {$gte: 7.5, $lte: 8}
     },
     {title:1, directors: 1, "imdb.rating": 1, _id: 0}
 }).toArray()
@@ -503,11 +503,11 @@ landisMovies = db.movies.find({
 console.table(landisMovies)
 ```
 
-![image](https://hackmd.io/_uploads/rkwfuGd3eg.png)
+![image](https://hackmd.io/_uploads/S1kZAW-pxx.png)
 
 Y Compass:
 
-![image](https://hackmd.io/_uploads/HJeQuGOhge.png)
+![image](https://hackmd.io/_uploads/SkytR-ZTex.png)
 
 Veo que podría haber mostrado en los anteriores resultados, únicamente los títulos, o nombres, etc. En fin, considérense corregidos.
 
