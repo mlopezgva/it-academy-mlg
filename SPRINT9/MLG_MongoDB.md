@@ -231,9 +231,7 @@ No hay un campo / clave para la fecha de alta. Solo podemos asumir que el primer
 db.user.find().limit(1)
 ```
 
-![image](https://hackmd.io/_uploads/Hkmp8GOhxl.png)
-
-Compass:
+Compass:  
 ![image](https://hackmd.io/_uploads/rk3TIGdhgx.png)
 
 > Pero eso no significa que ese sea el primer usuario registrado. No existe tal información, que haya visto.
