@@ -293,14 +293,14 @@ O, más sucinto:
 
 ```javascript
 mov1932DramaOrFrench = db.movies
-                     .find({
-                         year: 1932,
-                         $or: [{languages: /french/i},
-                               {genres: /drama/i}]
-                       },
-                       {title: 1, year: 1, genres: 1, languages: 1, _id: 0}
-                     )
-                     .toArray()
+                         .find({
+                             year: 1932,
+                             $or: [{languages: /french/i},
+                                   {genres: /drama/i}]
+                           },
+                           {title: 1, year: 1, genres: 1, languages: 1, _id: 0}
+                         )
+                         .toArray()
 ```
 
 Y, para ver mejor los resultados, con ese `.toArray()` podemos llamar a un método de `mongosh` que muestra el resultado en una tabla:
@@ -330,7 +330,7 @@ Entertainment> db.movies.countDocuments({
 422
 ```
 
-son muchos registros. Así que filtraré los 5 primeros, que ya es, solo para mostrar el resultado, como pide el enunciado. Pero no creo necesario volvar los datos de los 422 resgistros... ¿no?
+son muchos registros. Así que filtraré los 5 primeros, que ya es, solo para mostrar el resultado, como pide el enunciado. Pero no creo necesario volcar los datos de los 422 resgistros... ¿no?
 
 ```javascript
 Entertainment> console.table(
@@ -382,7 +382,7 @@ Nivell 2
 ### S9N2E1 - Exercici 1
 > Compte quants comentaris escriu un usuari/ària que utilitza "GAMEOFTHRON.ES" com a domini de correu electrònic.
 
-Aquí tenemos que usar un filtro regex (supongo que hay un "in_str" o equivalente, pero las regex son "nativas" y válidas) para el dominio. Como guarda el e-mail en la misma colección (posiblemente para permitir mś de un e-mail al mismo usuario, por el motivo que sea), no es necesario hacer ningún "join".
+Aquí tenemos que usar un filtro regex (supongo que hay un "in_str" o equivalente, pero las regex son "nativas" y válidas) para el dominio. Como guarda el e-mail en la misma colección (posiblemente para permitir más de un e-mail al mismo usuario, por el motivo que sea), no es necesario hacer ningún "join".
 
 ```javascript
 db.comments.countDocuments({email:/gameofthron.es/i})
