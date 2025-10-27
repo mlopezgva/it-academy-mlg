@@ -1,7 +1,6 @@
 ---
 tags:tcc,DataAnalytics
 ---
-*[//]: URL de enlaces
 [CLueArticle]: https://helloclue.com/es/articulos/ciclo-a-z/el-mito-de-las-fases-lunares-y-la-menstruacion
 [ClueHistogram]: https://images.ctfassets.net/juauvlea4rbf/2jqTWw7u5gqLrzHTSKHJ1X/b7bcb49aa9c033ff91950d3d0328fee0/inside_graph_ES_2x.png?w=2400&h=1200&q=50&fm=webp
 [SleepStudy]: https://www.cell.com/current-biology/fulltext/S0960-9822(13)00754-9
